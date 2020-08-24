@@ -11,6 +11,9 @@ import dev.penguinz.Sylk.util.Layer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The main application of the engine.
+ */
 public class Application {
 
     private static Application instance;
@@ -91,38 +94,72 @@ public class Application {
         VAO.triangle.dispose();
     }
 
+    /**
+     * Gets the logger tied to this application.
+     * @return the logger.
+     */
     public Logger getLogger() {
         return logger;
     }
 
+    /**
+     * Gets the inputs of this application instance.
+     * @return the inputs
+     */
     public InputManager getInput() {
         return window.getInputManager();
     }
 
+    /**
+     * Terminates the application.
+     */
     public void terminate() {
         this.isRunning = false;
     }
 
+    /**
+     * Gets the current window width.
+     * @return the current window width.
+     */
     public float getWindowWidth() {
         return window.getWidth();
     }
 
+    /**
+     * Gets the current window height.
+     * @return the current window height.
+     */
     public float getWindowHeight() {
         return window.getHeight();
     }
 
+    /**
+     * Sets the fullscreen state of the window.
+     * @param fullscreen the fullscreen state.
+     */
     public void setFullscreen(boolean fullscreen) {
         this.window.setFullscreen(fullscreen);
     }
 
+    /**
+     * Toggles between fullscreen and not fullscreen with the window.
+     */
     public void toggleFullscreen() {
         this.window.toggleFullscreen();
     }
 
+    /**
+     * Gets the current fps at the moment.
+     * @return the current fps.
+     */
     public int getFps() {
         return fps;
     }
 
+    /**
+     * Gets the current instance of {@link Application}.
+     * @return the application instance.
+     */
     public static Application getInstance() {
         return instance;
     }

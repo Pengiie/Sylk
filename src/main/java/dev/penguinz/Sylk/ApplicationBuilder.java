@@ -3,6 +3,9 @@ package dev.penguinz.Sylk;
 import dev.penguinz.Sylk.logging.LogLevel;
 import dev.penguinz.Sylk.util.Layer;
 
+/**
+ * Builder for an {@link Application}.
+ */
 public class ApplicationBuilder {
 
     private String title = "Sylk Engine";
@@ -11,31 +14,61 @@ public class ApplicationBuilder {
     private Layer[] layers = new Layer[0];
     private final LogLevel logLevel = LogLevel.INFO;
 
+    /**
+     * Sets the application title.
+     * @param title the title of the application.
+     * @return a reference to this object.
+     */
     public ApplicationBuilder setTitle(String title) {
         this.title = title;
         return this;
     }
 
+    /**
+     * Sets the starting window width.
+     * @param width the desired window width.
+     * @return a reference to this object.
+     */
     public ApplicationBuilder setWidth(int width) {
         this.width = width;
         return this;
     }
 
+    /**
+     * Sets the starting window height.
+     * @param height the desired window height.
+     * @return a reference to this object.
+     */
     public ApplicationBuilder setHeight(int height) {
         this.height = height;
         return this;
     }
 
+    /**
+     * Sets if the window can be resized.
+     * @param resizable should the window be resizable.
+     * @return a reference to this object.
+     */
     public ApplicationBuilder setResizable(boolean resizable) {
         this.resizable = resizable;
         return this;
     }
 
+    /**
+     * Sets if the window should start in fullscreen.
+     * @param fullscreen should the window start in fullscreen.
+     * @return a reference to this object.
+     */
     public ApplicationBuilder setFullscreen(boolean fullscreen) {
         this.fullscreen = fullscreen;
         return this;
     }
 
+    /**
+     * The layers to launch the application with.
+     * @param layers layers to startup with.
+     * @return a reference to this object.
+     */
     public ApplicationBuilder withLayers(Layer... layers) {
         this.layers = layers;
         return this;
@@ -45,6 +78,9 @@ public class ApplicationBuilder {
         return new Application(title, width, height, resizable, fullscreen, layers, logLevel);
     }
 
+    /**
+     * Creates and runs the application.
+     */
     public void buildAndRun() {
         build().run();
     }

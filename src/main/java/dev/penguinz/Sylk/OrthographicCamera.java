@@ -10,6 +10,8 @@ public class OrthographicCamera extends Camera {
     public float zoom;
     public float aspectRatio;
 
+
+
     public OrthographicCamera() {
         this(new Transform(), 1);
     }

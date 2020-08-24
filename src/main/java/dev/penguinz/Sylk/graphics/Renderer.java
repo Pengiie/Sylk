@@ -8,6 +8,9 @@ import dev.penguinz.Sylk.util.maths.Transform;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A renderer for rendering objects onto the screen.
+ */
 public abstract class Renderer implements Disposable {
 
     protected final Shader shader;
@@ -20,11 +23,21 @@ public abstract class Renderer implements Disposable {
         this.shader = shader;
     }
 
+    /**
+     * Prepares the renderer for rendering.
+     * @param camera the camera used for rendering.
+     */
     public void begin(Camera camera) {
         shader.use();
         this.currentCamera = camera;
     }
 
+    /**
+     * Renders a given model, transform, and material. Must be called between {@link #begin(Camera)} and {@link #finish()}.
+     * @param vao the model to render.
+     * @param transform the transform to use.
+     * @param material the material to use.
+     */
     public void render(VAO vao, Transform transform, Material material) {
         if(currentVao != vao) {
             if(currentVao != null)
@@ -36,6 +49,9 @@ public abstract class Renderer implements Disposable {
     
     protected abstract void flush();
 
+    /**
+     * Finishes rendering.
+     */
     public void finish() {
         flush();
     }

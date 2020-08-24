@@ -20,6 +20,9 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 
+/**
+ * The main renderer that handles rendering and post processing effects.
+ */
 public class MainRenderer extends Renderer {
 
     private static final VAO screenQuad = new VAO(new VBO(new float[] {
@@ -50,6 +53,9 @@ public class MainRenderer extends Renderer {
     private int[] blurFrameBuffers;
     private int[] blurTextures;
 
+    /**
+     * Creates a new renderer instance
+     */
     public MainRenderer() {
         super(MainShader.create());
         this.blendShader = BlendShader.create();
