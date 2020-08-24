@@ -115,6 +115,8 @@ public class MainRenderer extends Renderer {
     @Override
     public void begin(Camera camera) {
         super.begin(camera);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         bindFrameBuffer();
         GL30.glDrawBuffers(new int[] {GL30.GL_COLOR_ATTACHMENT0, GL30.GL_COLOR_ATTACHMENT1});
         GL30.glClear(GL_COLOR_BUFFER_BIT);
@@ -154,6 +156,7 @@ public class MainRenderer extends Renderer {
         if(useGlow)
             glowEffect();
         combineAndRender();
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     private boolean horizontal;

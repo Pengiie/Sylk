@@ -1,15 +1,14 @@
 package dev.penguinz.Sylk.ui.constraints;
 
-public class AbsoluteConstraint extends Constraint {
-
-    private final float absolutePixel;
+public class AbsoluteConstraint extends AnimatableConstraint {
 
     public AbsoluteConstraint(float absolutePixel) {
-        this.absolutePixel = absolutePixel;
+        super(absolutePixel);
     }
 
     @Override
     protected float calculateValue(UIConstraints parentConstraints) {
-        return absolutePixel;
+        return animatableValue.value;
     }
+
 }

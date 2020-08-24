@@ -12,26 +12,27 @@ import dev.penguinz.Sylk.ui.constraints.AbsoluteConstraint;
 import dev.penguinz.Sylk.ui.constraints.UIConstraints;
 import dev.penguinz.Sylk.util.Disposable;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UIRenderer implements Disposable {
+public class UIContainer extends UIComponent implements Disposable {
 
     private Matrix4f orthoProjection;
 
     private final Shader shader;
 
-    private final UIComponent screenComponent = new UIComponent();
-
-    public UIRenderer() {
+    public UIContainer() {
         this.shader = UIShader.create();
 
         updateProjection();
         updateScreenConstraints();
     }
 
-    public void renderScreen() {
+    public void render() {
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         shader.use();
         shader.loadUniform(UniformConstants.projectionMatrix, orthoProjection);
 
@@ -40,7 +41,7 @@ public class UIRenderer implements Disposable {
 
         List<UIRenderable> uiRenderables = new ArrayList<>();
 
-        addRenderableChildren(this.screenComponent, uiRenderables);
+        addRenderableChildren(this, uiRenderables);
 
         for (UIRenderable uiRenderable : uiRenderables) {
             uiRenderable.render(this.shader);
@@ -48,12 +49,17 @@ public class UIRenderer implements Disposable {
 
         VAO.quad.disableVertexAttribArrays();
         VAO.quad.unbind();
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     private void addRenderableChildren(UIComponent component, List<UIRenderable> uiRenderables) {
         if(component instanceof UIRenderable)
             uiRenderables.add((UIRenderable) component);
         component.getChildren().forEach(child -> addRenderableChildren(child, uiRenderables));
+    }
+
+    public void update() {
+        this.updateConstraints();
     }
 
     public void onEvent(Event event) {
@@ -70,17 +76,12 @@ public class UIRenderer implements Disposable {
     }
 
     private void updateScreenConstraints() {
-        this.screenComponent.setConstraints(
+        this.setConstraints(
                 new UIConstraints().
                         setXConstraint(new AbsoluteConstraint(0)).
                         setYConstraint(new AbsoluteConstraint(0)).
                         setWidthConstraint(new AbsoluteConstraint(Application.getInstance().getWindowWidth())).
                         setHeightConstraint(new AbsoluteConstraint(Application.getInstance().getWindowHeight())));
-        this.screenComponent.updateConstraints();
-    }
-
-    public UIComponent getScreenComponent() {
-        return screenComponent;
     }
 
     @Override

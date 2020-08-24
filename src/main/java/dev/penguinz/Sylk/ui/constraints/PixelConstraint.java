@@ -1,16 +1,14 @@
 package dev.penguinz.Sylk.ui.constraints;
 
-public class PixelConstraint extends Constraint {
-
-    private final float pixels;
+public class PixelConstraint extends AnimatableConstraint {
 
     public PixelConstraint(float pixels) {
-        this.pixels = pixels;
+        super(pixels);
     }
 
     @Override
     protected float calculateValue(UIConstraints parentConstraints) {
-        return parentConstraints.getRelativeConstraint(this.type) + pixels;
+        return parentConstraints.getRelativeConstraint(this.type) + animatableValue.value;
     }
 
 }

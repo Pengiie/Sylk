@@ -10,7 +10,7 @@ public class UIComponent {
     private UIComponent parent;
     private UIConstraints constraints;
 
-    public List<UIComponent> children = new ArrayList<>();
+    private List<UIComponent> children = new ArrayList<>();
 
     public void addComponent(UIComponent child, UIConstraints constraints) {
         child.setParent(this);
@@ -20,7 +20,7 @@ public class UIComponent {
         this.children.add(child);
     }
 
-    public void updateConstraints() {
+    void updateConstraints() {
         this.constraints.update(this.parent != null ? this.parent.constraints : null);
 
         this.children.forEach(UIComponent::updateConstraints);

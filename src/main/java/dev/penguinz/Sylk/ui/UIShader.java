@@ -44,6 +44,8 @@ public class UIShader {
                         "  vec4 textureColor = vec4(1, 1, 1, 1);\n"+
                         "  if("+UniformConstants.hasTexture+") {\n"+
                         "    textureColor = texture("+UniformConstants.texture0 +", pass_texCoord);\n"+
+                        "    if(textureColor.a < 0.1)\n"+
+                        "        discard;\n"+
                         "  }\n"+
                         "  fragColor = textureColor * "+UniformConstants.color+";\n" +
                         "}\n", uniforms);

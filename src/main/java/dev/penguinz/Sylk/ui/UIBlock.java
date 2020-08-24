@@ -1,5 +1,7 @@
 package dev.penguinz.Sylk.ui;
 
+import dev.penguinz.Sylk.animation.values.AnimatableColor;
+import dev.penguinz.Sylk.animation.values.AnimatableValue;
 import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
@@ -10,22 +12,22 @@ import org.lwjgl.opengl.GL11;
 
 public class UIBlock extends UIComponent implements UIRenderable {
 
-    public Color color;
+    public AnimatableValue<Color> color;
 
     public UIBlock(Color color) {
-        this.color = color;
+        this.color = new AnimatableColor(color);
     }
 
     @Override
     public void render(Shader shader) {
         shader.loadUniform(UniformConstants.transformationMatrix,
                 MatrixUtils.createTransformMatrix(
-                        new Vector2(this.getConstraints().getXConstraint(), this.getConstraints().getYConstraint()),
-                        new Vector2(this.getConstraints().getWidthConstraint(), this.getConstraints().getHeightConstraint())
+                        new Vector2(this.getConstraints().getXConstraintValue(), this.getConstraints().getYConstraintValue()),
+                        new Vector2(this.getConstraints().getWidthConstraintValue(), this.getConstraints().getHeightConstraintValue())
                 )
         );
         shader.loadUniform(UniformConstants.hasTexture, false);
-        shader.loadUniform(UniformConstants.color, color.toVector());
+        shader.loadUniform(UniformConstants.color, color.value.toVector());
         GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, VAO.quad.getVertexCount());
     }
 }

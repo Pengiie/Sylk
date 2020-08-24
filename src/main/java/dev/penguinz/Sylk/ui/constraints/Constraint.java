@@ -2,7 +2,7 @@ package dev.penguinz.Sylk.ui.constraints;
 
 public abstract class Constraint {
 
-    protected UIConstraints constraints;
+    private UIConstraints constraints;
     protected ConstraintType type;
     private float value;
 
@@ -12,6 +12,10 @@ public abstract class Constraint {
 
     protected void setConstraints(UIConstraints constraints) {
         this.constraints = constraints;
+    }
+
+    protected UIConstraints getConstraints() {
+        return this.constraints;
     }
 
     protected void update(UIConstraints parentConstraints) {
