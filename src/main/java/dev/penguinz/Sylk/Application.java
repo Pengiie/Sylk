@@ -23,9 +23,11 @@ public class Application {
 
     private final ApplicationPropertySet properties;
 
-    Application(String title, int width, int height, boolean resizable, Layer[] startupLayers, LogLevel logLevel) {
+    private int fps;
+
+    Application(String title, int width, int height, boolean resizable, boolean fullscreen, Layer[] startupLayers, LogLevel logLevel) {
         instance = this;
-        this.properties = new ApplicationPropertySet(title, width, height, resizable, startupLayers, logLevel);
+        this.properties = new ApplicationPropertySet(title, width, height, resizable, fullscreen, startupLayers, logLevel);
     }
 
     public void attachLayers(Layer... layers) {
@@ -62,12 +64,13 @@ public class Application {
 
         this.logger = new Logger(properties.logLevel);
 
-        this.window = new Window(properties.title, properties.width, properties.height, properties.resizable);
+        this.window = new Window(properties.title, properties.width, properties.height, properties.resizable, properties.fullscreen);
 
         attachLayers(properties.startupLayers);
 
         while(isRunning) {
             Time.getInstance().update();
+            this.fps = (int) (1/Time.deltaTime());
             window.prepare();
 
             for (Layer layer : layers) {
@@ -108,6 +111,18 @@ public class Application {
         return window.getHeight();
     }
 
+    public void setFullscreen(boolean fullscreen) {
+        this.window.setFullscreen(fullscreen);
+    }
+
+    public void toggleFullscreen() {
+        this.window.toggleFullscreen();
+    }
+
+    public int getFps() {
+        return fps;
+    }
+
     public static Application getInstance() {
         return instance;
     }
@@ -116,14 +131,16 @@ public class Application {
         public final String title;
         public final int width, height;
         public final boolean resizable;
+        public final boolean fullscreen;
         public final Layer[] startupLayers;
         public final LogLevel logLevel;
 
-        public ApplicationPropertySet(String title, int width, int height, boolean resizable, Layer[] startupLayers, LogLevel logLevel) {
+        public ApplicationPropertySet(String title, int width, int height, boolean resizable, boolean fullscreen, Layer[] startupLayers, LogLevel logLevel) {
             this.title = title;
             this.width = width;
             this.height = height;
             this.resizable = resizable;
+            this.fullscreen = fullscreen;
             this.startupLayers = startupLayers;
             this.logLevel = logLevel;
         }

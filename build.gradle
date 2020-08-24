@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 plugins {
     id 'java'
 }
@@ -12,8 +14,11 @@ ext {
     imguiVersion = '1.77-0.17.1'
 
     jomlVersion = "1.9.25"
-
-    natives = "natives-windows"
+    if(DefaultNativePlatform.currentOperatingSystem.windows) {
+        natives = System.getProperty("os.arch").contains("64") ? "natives-windows" : "natives-windows-x86"
+    } else if(DefaultNativePlatform.currentOperatingSystem.windows) {
+        natives = "natives-macos"
+    }
 }
 
 repositories {
@@ -33,10 +38,12 @@ dependencies {
     implementation "org.lwjgl:lwjgl-openal"
     implementation "org.lwjgl:lwjgl-opengl"
     implementation "org.lwjgl:lwjgl-stb"
-    runtimeOnly "org.lwjgl:lwjgl::$natives"
-    runtimeOnly "org.lwjgl:lwjgl-glfw::$natives"
-    runtimeOnly "org.lwjgl:lwjgl-openal::$natives"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$natives"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$natives"
+    for(String os in ["natives-windows", "natives-windows-x86", "natives-macos"]) {
+        runtimeOnly "org.lwjgl:lwjgl::"+os
+        runtimeOnly "org.lwjgl:lwjgl-glfw::"+os
+        runtimeOnly "org.lwjgl:lwjgl-openal::"+os
+        runtimeOnly "org.lwjgl:lwjgl-opengl::"+os
+        runtimeOnly "org.lwjgl:lwjgl-stb::"+os
+    }
     implementation "org.joml:joml:${jomlVersion}"
 }

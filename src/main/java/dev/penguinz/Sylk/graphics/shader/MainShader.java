@@ -11,8 +11,9 @@ public class MainShader {
 
     static {
         uniforms.add(new ShaderUniformVec4(UniformConstants.color));
+        uniforms.add(new ShaderUniformBool(UniformConstants.glows));
         uniforms.add(new ShaderUniformBool(UniformConstants.hasTexture));
-        uniforms.add(new ShaderUniformSampler2D(UniformConstants.texture));
+        uniforms.add(new ShaderUniformSampler2D(UniformConstants.texture0));
 
         uniforms.add(new ShaderUniformMat4(UniformConstants.projViewMatrix));
         uniforms.add(new ShaderUniformMat4(UniformConstants.transformationMatrix));
@@ -34,17 +35,23 @@ public class MainShader {
                 ,
                 "#version 400 core\n" +
                 "in vec2 pass_texCoord;\n"+
-                "out vec4 fragColor;\n" +
+                "layout (location = 0) out vec4 fragColor;\n" +
+                "layout (location = 1) out vec4 glowColor;\n" +
+                "uniform bool "+UniformConstants.glows+";\n"+
                 "uniform vec4 "+UniformConstants.color+";\n"+
                 "uniform bool "+UniformConstants.hasTexture+";\n"+
-                "uniform sampler2D "+UniformConstants.texture+";\n"+
+                "uniform sampler2D "+UniformConstants.texture0 +";\n"+
                 "void main()\n"+
                 "{\n" +
                 "  vec4 textureColor = vec4(1, 1, 1, 1);\n"+
                 "  if("+UniformConstants.hasTexture+") {\n"+
-                "    textureColor = texture("+UniformConstants.texture+", pass_texCoord);\n"+
+                "    textureColor = texture("+UniformConstants.texture0 +", pass_texCoord);\n"+
                 "  }\n"+
                 "  fragColor = textureColor * "+UniformConstants.color+";\n" +
+                "  if("+UniformConstants.glows+")\n"+
+                "    glowColor = vec4(fragColor.rgb, 1);\n"+
+                "  else\n"+
+                "    glowColor = vec4(0, 0, 0, 1);\n"+
                 "}\n", uniforms);
     }
 

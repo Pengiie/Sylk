@@ -14,7 +14,7 @@ import org.joml.Vector2f;
 public class HelloTriangle implements Layer {
 
     private OrthographicCamera camera;
-    private Renderer renderer;
+    private MainRenderer renderer;
 
     @Override
     public void init() {
@@ -25,18 +25,23 @@ public class HelloTriangle implements Layer {
     @Override
     public void update() {
         camera.update();
+        if(Application.getInstance().getInput().isKeyPressed(Key.KEY_F11 ))
+            Application.getInstance().toggleFullscreen();
     }
 
     @Override
     public void render() {
+        Material mat = new Material();
+        mat.glows = true;
         this.renderer.begin(camera);
-        this.renderer.render(VAO.triangle, new Transform(), new Material());
+        this.renderer.render(VAO.triangle, new Transform(), mat);
         this.renderer.finish();
     }
 
     @Override
     public void onEvent(Event event) {
         camera.onEvent(event);
+        this.renderer.onEvent(event);
     }
 
     @Override

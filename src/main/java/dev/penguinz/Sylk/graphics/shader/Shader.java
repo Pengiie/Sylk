@@ -15,10 +15,11 @@ public class Shader implements Disposable {
     private final HashMap<String, ShaderUniform<?>> uniforms = new HashMap<>();
 
     public Shader(String vertexSource, String fragmentSource, List<ShaderUniform<?>> uniforms) {
+        System.out.println();
         uniforms.forEach(uniform -> this.uniforms.put(uniform.location, uniform));
 
-        int vertexId = compileShader(vertexSource, GL20.GL_VERTEX_SHADER);
-        int fragmentId = compileShader(fragmentSource, GL20.GL_FRAGMENT_SHADER);
+        int vertexId = compileShader(vertexSource, GL20.GL_VERTEX_SHADER, "Vertex Shader");
+        int fragmentId = compileShader(fragmentSource, GL20.GL_FRAGMENT_SHADER, "Fragment Shader");
 
         this.programId = GL20.glCreateProgram();
 
@@ -26,6 +27,9 @@ public class Shader implements Disposable {
         GL20.glAttachShader(this.programId, fragmentId);
 
         GL20.glLinkProgram(this.programId);
+
+        GL20.glDetachShader(this.programId, vertexId);
+        GL20.glDetachShader(this.programId, fragmentId);
 
         GL20.glDeleteShader(vertexId);
         GL20.glDeleteShader(fragmentId);
@@ -48,14 +52,14 @@ public class Shader implements Disposable {
         GL20.glDeleteProgram(this.programId);
     }
 
-    private int compileShader(String source, int type) {
+    private int compileShader(String source, int type, String shader) {
         int shaderId = GL20.glCreateShader(type);
 
         GL20.glShaderSource(shaderId, source);
         GL20.glCompileShader(shaderId);
 
         if(GL20.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-            System.err.println(GL20.glGetShaderInfoLog(shaderId));
+            System.err.println(GL20.glGetShaderInfoLog(shaderId) +" Shader: "+shader);
         }
 
         return shaderId;

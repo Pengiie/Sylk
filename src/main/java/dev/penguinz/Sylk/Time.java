@@ -26,4 +26,8 @@ public class Time {
     public static float deltaTime() {
         return instance.deltaTime;
     }
+
+    public static float getTime() {
+        return (float) GLFW.glfwGetTime();
+    }
 }

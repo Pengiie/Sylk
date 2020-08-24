@@ -7,7 +7,7 @@ public class ApplicationBuilder {
 
     private String title = "Sylk Engine";
     private int width = 1280, height = 720;
-    private boolean resizable = false;
+    private boolean resizable = false, fullscreen = false;
     private Layer[] layers = new Layer[0];
     private final LogLevel logLevel = LogLevel.INFO;
 
@@ -31,13 +31,18 @@ public class ApplicationBuilder {
         return this;
     }
 
+    public ApplicationBuilder setFullscreen(boolean fullscreen) {
+        this.fullscreen = fullscreen;
+        return this;
+    }
+
     public ApplicationBuilder withLayers(Layer... layers) {
         this.layers = layers;
         return this;
     }
 
     private Application build() {
-        return new Application(title, width, height, resizable, layers, logLevel);
+        return new Application(title, width, height, resizable, fullscreen, layers, logLevel);
     }
 
     public void buildAndRun() {
