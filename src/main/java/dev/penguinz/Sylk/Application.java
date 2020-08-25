@@ -1,5 +1,6 @@
 package dev.penguinz.Sylk;
 
+import dev.penguinz.Sylk.assets.AssetManager;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.event.window.WindowCloseEvent;
 import dev.penguinz.Sylk.graphics.VAO;
@@ -22,6 +23,7 @@ public class Application {
 
     private Logger logger;
     private Window window;
+    private AssetManager assetManager;
     private final List<Layer> layers = new ArrayList<>();
 
     private final ApplicationPropertySet properties;
@@ -66,6 +68,7 @@ public class Application {
         isRunning = true;
 
         this.logger = new Logger(properties.logLevel);
+        this.assetManager = new AssetManager();
 
         this.window = new Window(properties.title, properties.width, properties.height, properties.resizable, properties.fullscreen);
 
@@ -90,6 +93,7 @@ public class Application {
 
     private void dispose() {
         window.dispose();
+        assetManager.dispose();
         VAO.quad.dispose();
         VAO.triangle.dispose();
     }
@@ -108,6 +112,14 @@ public class Application {
      */
     public InputManager getInput() {
         return window.getInputManager();
+    }
+
+    /**
+     * Gets the asset manager.
+     * @return the application asset manager.
+     */
+    public AssetManager getAssets() {
+        return assetManager;
     }
 
     /**

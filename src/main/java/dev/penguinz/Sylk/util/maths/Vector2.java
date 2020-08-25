@@ -73,4 +73,8 @@ public class Vector2 {
         this.y = this.y / total;
     }
 
+    @Override
+    public String toString() {
+        return "[ "+this.x+","+this.y+" ]";
+    }
 }

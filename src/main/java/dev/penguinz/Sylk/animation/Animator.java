@@ -23,7 +23,33 @@ public class Animator {
     private final HashMap<Animation, Float> runningAnimations = new HashMap<>();
 
     public void playAnimation(Animation animation) {
-        this.runningAnimations.put(animation, 0f);
+        playAnimation(animation, false);
+    }
+
+    public void playAnimation(Animation animation, boolean reversed) {
+        if(runningAnimations.containsKey(animation)) {
+            if(reversed) {
+                this.runningAnimations.put(animation.getReversedAnimation(), animation.getTimeInSeconds() - runningAnimations.get(animation));
+                this.runningAnimations.remove(animation);
+            }
+        } else if(runningAnimations.containsKey(animation.getReversedAnimation())){
+            if(!reversed) {
+                this.runningAnimations.put(animation,
+                        runningAnimations.containsKey(animation.getReversedAnimation()) ? animation.getTimeInSeconds() - runningAnimations.get(animation.getReversedAnimation()) : 0f);
+                this.runningAnimations.remove(animation.getReversedAnimation());
+            }
+        } else {
+            this.runningAnimations.put(reversed ? animation.getReversedAnimation() : animation, 0f);
+        }
+
+    }
+
+    public void stopAnimation(Animation animation) {
+        stopAnimation(animation, false);
+    }
+
+    public void stopAnimation(Animation animation, boolean reversed) {
+        runningAnimations.remove(reversed ? animation.getReversedAnimation() : animation);
     }
 
     public void update() {

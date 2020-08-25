@@ -20,14 +20,19 @@ public class UIBlock extends UIComponent implements UIRenderable {
 
     @Override
     public void render(Shader shader) {
+        loadMainShaderData(shader);
+        shader.loadUniform(UniformConstants.hasTexture, false);
+        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, VAO.quad.getVertexCount());
+    }
+
+    protected void loadMainShaderData(Shader shader) {
         shader.loadUniform(UniformConstants.transformationMatrix,
                 MatrixUtils.createTransformMatrix(
                         new Vector2(this.getConstraints().getXConstraintValue(), this.getConstraints().getYConstraintValue()),
                         new Vector2(this.getConstraints().getWidthConstraintValue(), this.getConstraints().getHeightConstraintValue())
                 )
         );
-        shader.loadUniform(UniformConstants.hasTexture, false);
         shader.loadUniform(UniformConstants.color, color.value.toVector());
-        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, VAO.quad.getVertexCount());
     }
+
 }

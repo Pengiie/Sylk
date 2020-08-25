@@ -82,7 +82,7 @@ public class Window implements Disposable {
         glfwSetWindowCloseCallback(windowHandle, closeCallback);
         glfwSetFramebufferSizeCallback(windowHandle, resizeCallback);
 
-        this.inputManager = new InputManager(windowHandle);
+        this.inputManager = new InputManager(windowHandle, this::dispatchEvent);
 
         if(!fullscreen)
             centerWindow();

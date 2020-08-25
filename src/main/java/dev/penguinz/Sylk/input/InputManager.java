@@ -1,6 +1,8 @@
 package dev.penguinz.Sylk.input;
 
 import dev.penguinz.Sylk.Application;
+import dev.penguinz.Sylk.event.Event;
+import dev.penguinz.Sylk.event.input.MouseClickEvent;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -10,6 +12,8 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class InputManager {
 
@@ -18,10 +22,12 @@ public class InputManager {
     private final HashMap<Key, List<Modifier>> keyHoldsDelayed = new HashMap<>();
     private final HashMap<Key, List<Modifier>> keyReleases = new HashMap<>();
 
-    private final Vector2f mousePosition = new Vector2f(0, 0);
+    private final Vector2f mousePosition = new Vector2f();
     private final List<Integer> mousePresses = new ArrayList<>();
     private final List<Integer> mouseHolds = new ArrayList<>();
     private final List<Integer> mouseReleases = new ArrayList<>();
+
+    private final Consumer<Event> eventDispatchCallback;
 
     GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
         @Override
@@ -52,6 +58,7 @@ public class InputManager {
             if(action == GLFW.GLFW_PRESS) {
                 mousePresses.add(button);
                 mouseHolds.add(button);
+                eventDispatchCallback.accept(new MouseClickEvent(button, getMousePosX(), getMousePosY()));
             } else if(action == GLFW.GLFW_REPEAT)
                 mouseHolds.add(button);
             else if(action == GLFW.GLFW_RELEASE)
@@ -63,13 +70,14 @@ public class InputManager {
         @Override
         public void invoke(long window, double xpos, double ypos) {
             mousePosition.x = (float) xpos;
-            mousePosition.y = (float) ypos * -1 + Application.getInstance().getWindowHeight();
+            mousePosition.y = (float) ypos;
         }
     };
 
-    public InputManager(long windowHandle) {
+    public InputManager(long windowHandle, Consumer<Event> eventDispatchCallback) {
         GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_LOCK_KEY_MODS, GLFW.GLFW_TRUE);
         setCallbacks(windowHandle);
+        this.eventDispatchCallback = eventDispatchCallback;
     }
 
     private void setCallbacks(long windowHandle) {
@@ -160,12 +168,12 @@ public class InputManager {
         return mouseReleases.contains(button);
     }
 
-    public int getMousePosX() {
-        return (int) mousePosition.x;
+    public float getMousePosX() {
+        return mousePosition.x;
     }
 
-    public int getMousePosY() {
-        return (int) mousePosition.y;
+    public float getMousePosY() {
+        return mousePosition.y;
     }
 
 }

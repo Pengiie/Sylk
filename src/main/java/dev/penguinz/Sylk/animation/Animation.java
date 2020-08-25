@@ -13,6 +13,8 @@ public class Animation {
 
     private final float timeInSeconds;
 
+    private Animation reversedAnimation;
+
     public Animation(float timeInSeconds) {
         this.timeInSeconds = timeInSeconds;
     }
@@ -20,20 +22,28 @@ public class Animation {
     public Animation(Animation animation) {
         this.timeInSeconds = animation.timeInSeconds;
         this.animationValues = new HashSet<>(animation.animationValues);
+        this.reversedAnimation = animation;
     }
 
     public Animation addValue(AnimatableConstraint value, float from, float to) {
-        animationValues.add(new AnimationData<>(value.getAnimatableValue(), from, to));
-        return this;
+        return addValue(value.getAnimatableValue(), from, to);
     }
 
     public <T> Animation addValue(AnimatableValue<T> value, T from, T to) {
         animationValues.add(new AnimationData<>(value, from, to));
+        updateReversedAnimation();
         return this;
     }
 
-    public void reverse() {
-        animationValues = animationValues.stream().map(AnimationData::getReverse).collect(Collectors.toSet());
+    private void updateReversedAnimation() {
+        this.reversedAnimation = new Animation(this);
+        this.reversedAnimation.animationValues = this.reversedAnimation.animationValues.stream().map(AnimationData::getReverse).collect(Collectors.toSet());
+    }
+
+    public Animation getReversedAnimation() {
+        if(this.reversedAnimation == null)
+            updateReversedAnimation();
+        return this.reversedAnimation;
     }
 
     protected float getTimeInSeconds() {
