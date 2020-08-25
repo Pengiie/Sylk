@@ -5,6 +5,8 @@ import dev.penguinz.Sylk.ApplicationBuilder;
 import dev.penguinz.Sylk.animation.Animation;
 import dev.penguinz.Sylk.animation.Animator;
 import dev.penguinz.Sylk.assets.AssetManager;
+import dev.penguinz.Sylk.assets.Texture;
+import dev.penguinz.Sylk.assets.options.TextureOptions;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.input.Key;
 import dev.penguinz.Sylk.ui.UIBlock;

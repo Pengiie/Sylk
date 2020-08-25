@@ -14,27 +14,18 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Texture implements Disposable {
 
-    private final int id;
+    private int id;
     private int width, height;
     private int channels;
 
     private ByteBuffer data;
 
-    public Texture(String path) {
-        this.id = GL11.glGenTextures();
-        bind();
-
-        loadAsync(path);
-        loadSync();
-    }
-
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, id);
     }
 
-    private void loadAsync(String path) {
-       // this.data = IOUtils.loadFile(path);
-       // System.out.println(this.data.capacity());
+    public void loadAsync(String path) {
+        this.data = IOUtils.loadFile(path);
 
         try(MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer width = stack.mallocInt(1);
@@ -42,7 +33,7 @@ public class Texture implements Disposable {
             IntBuffer channels = stack.mallocInt(1);
 
             STBImage.nstbi_set_flip_vertically_on_load(1);
-            this.data = STBImage.stbi_load(path, width, height, channels, 3);
+            this.data = STBImage.stbi_load_from_memory(this.data, width, height, channels, 3);
 
             this.width = width.get(0);
             this.height = height.get(0);
@@ -50,7 +41,10 @@ public class Texture implements Disposable {
         }
     }
 
-    private void loadSync() {
+    public void loadSync() {
+        this.id = GL11.glGenTextures();
+        bind();
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL15.GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL15.GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
