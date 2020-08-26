@@ -20,8 +20,15 @@ public class UIComponent {
         this.children.add(child);
     }
 
-    void updateConstraints() {
+    void forceUpdateConstraints() {
         this.constraints.update(this.parent != null ? this.parent.constraints : null);
+
+        this.children.forEach(UIComponent::updateConstraints);
+    }
+
+    void updateConstraints() {
+        if(this.parent != null && this.parent.constraints != null)
+            this.constraints.update(this.parent.constraints);
 
         this.children.forEach(UIComponent::updateConstraints);
     }

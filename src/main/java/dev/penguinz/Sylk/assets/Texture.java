@@ -57,10 +57,26 @@ public class Texture implements Disposable {
 
     private int mapFormat() {
         switch (channels) {
+            case 1: return GL_RED;
             case 3: return GL_RGB;
             case 4: return GL_RGBA;
             default: throw new RuntimeException("Trying to load unsupported image format");
         }
+    }
+
+    public void setData(ByteBuffer data, int width, int height, int channels) {
+        this.data = data;
+        this.width = width;
+        this.height = height;
+        this.channels = channels;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     @Override

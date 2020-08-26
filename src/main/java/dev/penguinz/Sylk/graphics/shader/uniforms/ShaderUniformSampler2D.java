@@ -16,6 +16,7 @@ public class ShaderUniformSampler2D extends ShaderUniform<Texture> {
     @Override
     public void loadUniform(Shader shader) {
         GL30.glActiveTexture(GL13.GL_TEXTURE0);
-        value.bind();
+        if(value == null) GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        else value.bind();
     }
 }

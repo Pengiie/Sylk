@@ -2,20 +2,41 @@ package dev.penguinz.Sylk.ui;
 
 import dev.penguinz.Sylk.animation.values.AnimatableColor;
 import dev.penguinz.Sylk.animation.values.AnimatableValue;
+import dev.penguinz.Sylk.ui.constraints.RelativeConstraint;
+import dev.penguinz.Sylk.ui.constraints.UIConstraints;
 import dev.penguinz.Sylk.ui.font.Text;
 import dev.penguinz.Sylk.util.Color;
+import jdk.nashorn.internal.objects.annotations.Getter;
 
 public class UIButton extends UIBlock implements UIEventListener {
 
     private Color previousColor;
     public AnimatableValue<Color> hoverColor;
 
+    public UIText text;
+
     public final Runnable onClick;
 
-    public UIButton(Color color, Color hoverColor, Text text, Runnable onClick) {
+    public UIButton(Color color, Color hoverColor, UIText text, Runnable onClick) {
         super(color);
         this.hoverColor = new AnimatableColor(hoverColor);
         this.onClick = onClick;
+
+        this.text = text;
+
+        this.addComponent(
+                text,
+                new UIConstraints().
+                setXConstraint(new RelativeConstraint(0.1f)).
+                setYConstraint(new RelativeConstraint(0.1f)).
+                setWidthConstraint(new RelativeConstraint(0.8f)).
+                setHeightConstraint(new RelativeConstraint(0.8f)));
+
+
+    }
+
+    public UIText getText() {
+        return text;
     }
 
     @Override

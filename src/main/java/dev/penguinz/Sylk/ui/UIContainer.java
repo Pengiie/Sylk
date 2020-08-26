@@ -11,6 +11,8 @@ import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
 import dev.penguinz.Sylk.ui.constraints.AbsoluteConstraint;
 import dev.penguinz.Sylk.ui.constraints.UIConstraints;
+import dev.penguinz.Sylk.ui.font.FontShader;
+import dev.penguinz.Sylk.ui.font.UIFontRenderable;
 import dev.penguinz.Sylk.util.Disposable;
 import dev.penguinz.Sylk.util.maths.Vector2;
 import org.joml.Matrix4f;
@@ -23,9 +25,11 @@ public class UIContainer extends UIComponent implements Disposable {
     private Matrix4f orthoProjection;
 
     private final Shader shader;
+    private final Shader fontShader;
 
     public UIContainer() {
         this.shader = UIShader.create();
+        this.fontShader = FontShader.create();
 
         updateProjection();
         updateScreenConstraints();
@@ -34,6 +38,9 @@ public class UIContainer extends UIComponent implements Disposable {
     public void render() {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        fontShader.use();
+        fontShader.loadUniform(UniformConstants.projectionMatrix, orthoProjection);
+
         shader.use();
         shader.loadUniform(UniformConstants.projectionMatrix, orthoProjection);
 
@@ -44,8 +51,16 @@ public class UIContainer extends UIComponent implements Disposable {
 
         addRenderableChildren(this, uiRenderables);
 
-        for (UIRenderable uiRenderable : uiRenderables) {
-            uiRenderable.render(this.shader);
+        for (UIRenderable uiRenderable: uiRenderables) {
+            if(uiRenderable instanceof UIFontRenderable) {
+                fontShader.use();
+                uiRenderable.render(this.fontShader);
+                shader.use();
+                VAO.quad.bind();
+                VAO.quad.enableVertexAttribArrays();
+            } else
+                uiRenderable.render(this.shader);
+
         }
 
         VAO.quad.disableVertexAttribArrays();
@@ -62,7 +77,7 @@ public class UIContainer extends UIComponent implements Disposable {
     private final Set<UIComponent> hovering = new HashSet<>();
 
     public void update() {
-        this.updateConstraints();
+        this.forceUpdateConstraints();
 
         List<UIComponent> uiEventListeners = new ArrayList<>();
 

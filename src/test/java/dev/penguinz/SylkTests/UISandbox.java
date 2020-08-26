@@ -12,10 +12,15 @@ import dev.penguinz.Sylk.input.Key;
 import dev.penguinz.Sylk.ui.UIBlock;
 import dev.penguinz.Sylk.ui.UIButton;
 import dev.penguinz.Sylk.ui.UIContainer;
+import dev.penguinz.Sylk.ui.UIText;
 import dev.penguinz.Sylk.ui.constraints.*;
+import dev.penguinz.Sylk.ui.font.Font;
 import dev.penguinz.Sylk.ui.font.Text;
+import dev.penguinz.Sylk.ui.font.TextAlignment;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;
+import dev.penguinz.Sylk.util.RefContainer;
+import org.joml.Matrix4f;
 
 public class UISandbox implements Layer {
 
@@ -25,8 +30,10 @@ public class UISandbox implements Layer {
 
     private Animation increasePixels;
 
+    private RefContainer<Font> font = new RefContainer<>(null);
+
     UIButton component = new UIButton(new Color(1, 0, 1), new Color(0, 1, 0),
-            new Text(Color.white, "Test"),
+            new UIText("Test,", Color.white, font, 32),
             () -> Application.getInstance().getLogger().logInfo("Button has been clicked"));
 
     @Override
@@ -43,6 +50,19 @@ public class UISandbox implements Layer {
         );
         this.increasePixels = new Animation(1).
                 addValue(component.getConstraints().getYAnimatableConstraint(), 50, 100);
+
+        Application.getInstance().getAssets().loadAsset("arial.ttf");
+        Application.getInstance().getAssets().finishLoading();
+
+        this.font.value = Application.getInstance().getAssets().getAsset("arial.ttf");
+
+        /*this.uiContainer.addComponent(
+                new UIText("Hello, World!", Color.white, Application.getInstance().getAssets().getAsset("arial.ttf")),
+                new UIConstraints().
+                setXConstraint(new PixelConstraint(50)).
+                setYConstraint(new PixelConstraint(50)).
+                setWidthConstraint(new RelativeConstraint(0.25f)).
+                setHeightConstraint(new PixelConstraint(128)));*/
     }
 
     @Override

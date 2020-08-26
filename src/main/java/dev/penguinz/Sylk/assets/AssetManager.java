@@ -2,13 +2,13 @@ package dev.penguinz.Sylk.assets;
 
 import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.assets.loaders.AssetLoader;
+import dev.penguinz.Sylk.assets.loaders.FontLoader;
 import dev.penguinz.Sylk.assets.loaders.TextureLoader;
 import dev.penguinz.Sylk.assets.options.AssetOptions;
+import dev.penguinz.Sylk.ui.font.Font;
 import dev.penguinz.Sylk.util.Disposable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,6 +26,9 @@ public class AssetManager implements Disposable {
     static {
         loaders.put(Texture.class, new TextureLoader());
         fileTypes.put("png", Texture.class);
+
+        loaders.put(Font.class, new FontLoader());
+        fileTypes.put("ttf", Font.class);
     }
 
     public AssetManager() {
@@ -50,7 +53,7 @@ public class AssetManager implements Disposable {
         return false;
     }
 
-    public <T> void loadAsset(String file) {
+    public void loadAsset(String file) {
         loadAsset(file, getClassType(file.substring(file.length()-3)), null);
     }
 

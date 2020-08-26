@@ -8,7 +8,10 @@ public class PixelConstraint extends AnimatableConstraint {
 
     @Override
     protected float calculateValue(UIConstraints parentConstraints) {
-        return parentConstraints.getRelativeConstraint(this.type) + animatableValue.value;
+        if(this.type == ConstraintType.WIDTH || this.type == ConstraintType.HEIGHT)
+            return animatableValue.value;
+        else
+            return parentConstraints.getRelativeConstraint(this.type) + animatableValue.value;
     }
 
 }

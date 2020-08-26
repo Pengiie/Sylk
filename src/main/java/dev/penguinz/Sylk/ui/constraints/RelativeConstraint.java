@@ -8,7 +8,10 @@ public class RelativeConstraint extends AnimatableConstraint {
 
     @Override
     protected float calculateValue(UIConstraints parentConstraints) {
-        return parentConstraints.getRelativeLengthConstraint(this.type) * animatableValue.value;
+        float factoredParentValue = parentConstraints.getRelativeLengthConstraint(this.type) * animatableValue.value;
+        if(this.type == ConstraintType.X || this.type == ConstraintType.Y)
+            return parentConstraints.getRelativeConstraint(this.type) + factoredParentValue;
+        return factoredParentValue;
     }
 
 }
