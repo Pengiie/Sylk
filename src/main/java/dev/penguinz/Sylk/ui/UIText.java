@@ -22,53 +22,58 @@ import java.util.List;
 
 public class UIText extends UIComponent implements UIFontRenderable {
 
-    public final HashMap<Text, Float> texts = new HashMap<>();
+    public final List<Text> texts = new ArrayList<>();
 
     private String text;
     private Color color;
     private final RefContainer<Font> font;
-    private int pixelHeight;
+    private TextHeight height;
     private boolean wrapText;
     public TextAlignment horizontalAlignment, verticalAlignment;
 
     private boolean loadedTexts = false;
+    private float previousHeight;
 
-    public UIText(String text, Font font, int pixelHeight) {
-        this(text, Color.black, new RefContainer<>(font), pixelHeight, true, TextAlignment.CENTER, TextAlignment.CENTER);
+    public UIText(String text, Font font, TextHeight height) {
+        this(text, Color.black, new RefContainer<>(font), height, true, TextAlignment.CENTER, TextAlignment.CENTER);
     }
 
-    public UIText(String text, Color color, Font font, int pixelHeight) {
-        this(text, color, new RefContainer<>(font), pixelHeight, true, TextAlignment.CENTER, TextAlignment.CENTER);
+    public UIText(String text, Color color, Font font, TextHeight height) {
+        this(text, color, new RefContainer<>(font), height, true, TextAlignment.CENTER, TextAlignment.CENTER);
     }
 
-    public UIText(String text, Color color, RefContainer<Font> font, int pixelHeight) {
-        this(text, color, font, pixelHeight, true, TextAlignment.CENTER, TextAlignment.CENTER);
+    public UIText(String text, Color color, RefContainer<Font> font, TextHeight height) {
+        this(text, color, font, height, true, TextAlignment.CENTER, TextAlignment.CENTER);
     }
 
-    public UIText(String text, RefContainer<Font> font, int pixelHeight) {
-        this(text, Color.black, font, pixelHeight, true, TextAlignment.CENTER, TextAlignment.CENTER);
+    public UIText(String text, RefContainer<Font> font, TextHeight height) {
+        this(text, Color.black, font, height, true, TextAlignment.CENTER, TextAlignment.CENTER);
     }
 
-    public UIText(String text, Color color, RefContainer<Font> font, int pixelHeight, boolean wrapText, TextAlignment horizontalAlignment, TextAlignment verticalAlignment) {
+    public UIText(String text, Color color, RefContainer<Font> font, TextHeight height, boolean wrapText, TextAlignment horizontalAlignment, TextAlignment verticalAlignment) {
         this.text = text;
         this.color = color;
         this.font = font;
-        this.pixelHeight = pixelHeight;
+        this.height = height;
         this.wrapText = wrapText;
         this.horizontalAlignment = horizontalAlignment;
         this.verticalAlignment = verticalAlignment;
     }
 
     private void updateTexts() {
+        this.previousHeight = this.getConstraints().getHeightConstraintValue();
         if(font.value == null)
             return;
 
+        int pixelHeight = height.getPixelHeight(this.getConstraints());
+
         texts.clear();
-        for (String text : TextUtils.splitTexts(text, pixelHeight, getConstraints().getWidthConstraintValue(), font.value)) {
-            texts.put(new Text(text, pixelHeight, color, font), TextUtils.getTextWidth(text, pixelHeight, font.value));
-            if(!wrapText)
-                break;
-        }
+        if(pixelHeight <= this.getConstraints().getHeightConstraintValue())
+            for (String text : TextUtils.splitTexts(text, pixelHeight, getConstraints().getWidthConstraintValue(), font.value)) {
+                texts.add(new Text(text, pixelHeight, color, font));
+                if(!wrapText)
+                    break;
+            }
         loadedTexts = true;
     }
 
@@ -83,6 +88,11 @@ public class UIText extends UIComponent implements UIFontRenderable {
         if(texts.isEmpty())
             return;
 
+        if(this.previousHeight != this.getConstraints().getHeightConstraintValue())
+            updateTexts();
+
+        int pixelHeight = height.getPixelHeight(this.getConstraints());
+
         shader.loadUniform(UniformConstants.color, color.toVector());
         shader.loadUniform(UniformConstants.texture0, font.value.getTexture());
 
@@ -92,22 +102,21 @@ public class UIText extends UIComponent implements UIFontRenderable {
         float totalHeight = texts.size() * font.value.getNewLineSpace(font.value.getFontScale(pixelHeight)) + font.value.getLineGap(font.value.getFontScale(pixelHeight)) - font.value.getDescent(font.value.getFontScale(pixelHeight));
         float height = this.getConstraints().getHeightConstraintValue();
         float yPos = this.getConstraints().getYConstraintValue();
-        System.out.println(yPos);
         if(verticalAlignment == TextAlignment.CENTER)
             yPos = yPos + height/2 - totalHeight/2;
         if(verticalAlignment == TextAlignment.BOTTOM)
             yPos = yPos + height - totalHeight;
 
         int i = 0;
-        for (Text text: texts.keySet()) {
+        for (Text text: texts) {
             Matrix4f translation = new Matrix4f();
 
             if(horizontalAlignment == TextAlignment.LEFT)
                 translation.m30(xPos);
             if(horizontalAlignment == TextAlignment.CENTER)
-                translation.m30(xPos + width/2 - texts.get(text)/2);
+                translation.m30(xPos + width/2 - text.getWidth()/2);
             if(horizontalAlignment == TextAlignment.RIGHT)
-                translation.m30(xPos + width - texts.get(text));
+                translation.m30(xPos + width - text.getWidth());
 
             translation.m31(yPos + i * font.value.getNewLineSpace(font.value.getFontScale(pixelHeight)));
 

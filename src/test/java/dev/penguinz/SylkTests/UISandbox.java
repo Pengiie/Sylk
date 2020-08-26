@@ -6,6 +6,7 @@ import dev.penguinz.Sylk.animation.Animation;
 import dev.penguinz.Sylk.animation.Animator;
 import dev.penguinz.Sylk.assets.AssetManager;
 import dev.penguinz.Sylk.assets.Texture;
+import dev.penguinz.Sylk.assets.options.FontOptions;
 import dev.penguinz.Sylk.assets.options.TextureOptions;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.input.Key;
@@ -14,9 +15,7 @@ import dev.penguinz.Sylk.ui.UIButton;
 import dev.penguinz.Sylk.ui.UIContainer;
 import dev.penguinz.Sylk.ui.UIText;
 import dev.penguinz.Sylk.ui.constraints.*;
-import dev.penguinz.Sylk.ui.font.Font;
-import dev.penguinz.Sylk.ui.font.Text;
-import dev.penguinz.Sylk.ui.font.TextAlignment;
+import dev.penguinz.Sylk.ui.font.*;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;
 import dev.penguinz.Sylk.util.RefContainer;
@@ -33,7 +32,7 @@ public class UISandbox implements Layer {
     private RefContainer<Font> font = new RefContainer<>(null);
 
     UIButton component = new UIButton(new Color(1, 0, 1), new Color(0, 1, 0),
-            new UIText("Test,", Color.white, font, 32),
+            new UIText("The Quick Brown Fox Jumped Over The Lazy Dog.", Color.white, font, new RatioTextHeight(0.3f)),
             () -> Application.getInstance().getLogger().logInfo("Button has been clicked"));
 
     @Override
@@ -51,18 +50,9 @@ public class UISandbox implements Layer {
         this.increasePixels = new Animation(1).
                 addValue(component.getConstraints().getYAnimatableConstraint(), 50, 100);
 
-        Application.getInstance().getAssets().loadAsset("arial.ttf");
-        Application.getInstance().getAssets().finishLoading();
-
-        this.font.value = Application.getInstance().getAssets().getAsset("arial.ttf");
-
-        /*this.uiContainer.addComponent(
-                new UIText("Hello, World!", Color.white, Application.getInstance().getAssets().getAsset("arial.ttf")),
-                new UIConstraints().
-                setXConstraint(new PixelConstraint(50)).
-                setYConstraint(new PixelConstraint(50)).
-                setWidthConstraint(new RelativeConstraint(0.25f)).
-                setHeightConstraint(new PixelConstraint(128)));*/
+        Application.getInstance().getAssets().loadAsset("times.ttf",
+                new FontOptions().
+                setAssetLoadedCallback(font -> this.font.value = font));
     }
 
     @Override

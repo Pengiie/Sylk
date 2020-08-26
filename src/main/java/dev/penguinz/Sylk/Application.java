@@ -1,6 +1,7 @@
 package dev.penguinz.Sylk;
 
 import dev.penguinz.Sylk.assets.AssetManager;
+import dev.penguinz.Sylk.assets.options.AssetOptions;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.event.window.WindowCloseEvent;
 import dev.penguinz.Sylk.graphics.VAO;
@@ -78,6 +79,8 @@ public class Application {
             Time.getInstance().update();
             this.fps = (int) (1/Time.deltaTime());
             window.prepare();
+
+            this.assetManager.update();
 
             for (Layer layer : layers) {
                 layer.update();

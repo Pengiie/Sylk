@@ -29,7 +29,10 @@ public class TextUtils {
     public static float getTextWidth(String text, float pixelHeight, Font font) {
         float width = 0;
         for (int i = 0; i < text.length(); i++) {
-            width += font.getCharacterData()[text.charAt(i)-Font.START_CHAR].advance * font.getCharacterScale() * pixelHeight;
+            Character charData = font.getCharacterData()[text.charAt(i)-Font.START_CHAR];
+            width +=
+                    charData.advance * font.getCharacterScale() * pixelHeight +
+                            (charData.position.z - charData.position.x) * font.getCharacterScale() * pixelHeight;
         }
         return width;
     }

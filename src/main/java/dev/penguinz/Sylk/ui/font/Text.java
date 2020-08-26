@@ -17,6 +17,7 @@ public class Text {
     public final RefContainer<Font> font;
 
     private VAO generatedVAO;
+    private float width = 0;
 
     public Text(String text, int pixelHeight, Color color, RefContainer<Font> font) {
         this.text = text;
@@ -50,46 +51,26 @@ public class Text {
             float height = (charData.position.w - charData.position.y) * font.getCharacterScale() * pixelHeight;
             float descent = charData.descent * font.getCharacterScale() * pixelHeight;
 
-            // 0, 1
-            positions[posIndex] = 0 + xPos;
-            textureCoords[posIndex++] = charData.texturePosition.x;
-            positions[posIndex] = font.getLineHeight(font.getFontScale(pixelHeight)) - height + descent;
-            textureCoords[posIndex++] = charData.texturePosition.y;
+            int[] indices = new int[] {
+                    0, 1,
+                    1, 0,
+                    0, 0,
+                    0, 1,
+                    1, 0,
+                    1, 1
+            };
+            for(int index = 0; index < indices.length; index++) {
+                positions[posIndex] = xPos + (indices[index] == 0 ? 0 : width);
+                textureCoords[posIndex++] = indices[index++] == 0 ? charData.texturePosition.x : charData.texturePosition.z;
+                positions[posIndex] = font.getLineHeight(font.getFontScale(pixelHeight)) - (indices[index] == 0 ? 0 : height) + descent;
+                textureCoords[posIndex++] = indices[index] == 0 ? charData.texturePosition.w : charData.texturePosition.y;
+            }
 
-            // 1, 0
-            positions[posIndex] = width + xPos;
-            textureCoords[posIndex++] = charData.texturePosition.z;
-            positions[posIndex] = font.getLineHeight(font.getFontScale(pixelHeight)) + descent;
-            textureCoords[posIndex++] = charData.texturePosition.w;
-
-            // 0, 0
-            positions[posIndex] = 0 + xPos;
-            textureCoords[posIndex++] = charData.texturePosition.x;
-            positions[posIndex] = font.getLineHeight(font.getFontScale(pixelHeight)) + descent;
-            textureCoords[posIndex++] = charData.texturePosition.w;
-
-            // 0, 1
-            positions[posIndex] = 0 + xPos;
-            textureCoords[posIndex++] = charData.texturePosition.x;
-            positions[posIndex] = font.getLineHeight(font.getFontScale(pixelHeight)) - height + descent;
-            textureCoords[posIndex++] = charData.texturePosition.y;
-
-            // 1, 0
-            positions[posIndex] = width + xPos;
-            textureCoords[posIndex++] = charData.texturePosition.z;
-            positions[posIndex] = font.getLineHeight(font.getFontScale(pixelHeight)) + descent;
-            textureCoords[posIndex++] = charData.texturePosition.w;
-
-            // 1, 1
-            positions[posIndex] = width + xPos;
-            textureCoords[posIndex++] = charData.texturePosition.z;
-            positions[posIndex] = font.getLineHeight(font.getFontScale(pixelHeight)) - height + descent;
-            textureCoords[posIndex++] = charData.texturePosition.y;
-
-
-            xPos += charData.advance * font.getCharacterScale() * pixelHeight;
-            System.out.println((char) codepoint+" "+codepoint+" "+charData.codepoint);
+            xPos += width + charData.advance * font.getCharacterScale() * pixelHeight;
+            if(i + 1 == text.length())
+                xPos -= charData.advance * font.getCharacterScale() * pixelHeight;
         }
+        this.width = xPos;
         this.generatedVAO = new VAO(new VBO(positions, 2, VBOType.VERTICES), new VBO(textureCoords, 2, VBOType.TEXTURE_COORDS));
     }
 
@@ -97,6 +78,10 @@ public class Text {
         if(this.generatedVAO == null)
             calculateVao();
         return this.generatedVAO == null ? new VAO() : this.generatedVAO;
+    }
+
+    public float getWidth() {
+        return width;
     }
 
     public String getText() {

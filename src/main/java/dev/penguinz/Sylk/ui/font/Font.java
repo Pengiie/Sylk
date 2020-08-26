@@ -20,7 +20,7 @@ public class Font implements Disposable {
     private final Texture texture = new Texture();
     private ByteBuffer textureData;
 
-    private final STBTTFontinfo font = STBTTFontinfo.create();
+    private STBTTFontinfo font;
     private STBTTPackedchar.Buffer charBuffer;
 
     private Character[] characterData;
@@ -30,7 +30,7 @@ public class Font implements Disposable {
 
     private float lineHeight, newLineSpace, lineGap, descent;
 
-    public void loadAsync(String path, int charRange, int pixelHeight, int width, int height) {
+    public void loadAsync(String path, int charRange, int pixelHeight, int width, int height, int overSampling) {
         ByteBuffer buffer = IOUtils.loadFile(path);
         
         this.textureData = ByteBuffer.allocateDirect(width * height);
@@ -38,6 +38,7 @@ public class Font implements Disposable {
         this.charBuffer = STBTTPackedchar.create(charRange);
         this.characterData = new Character[charRange];
 
+        this.font = STBTTFontinfo.malloc();
         STBTruetype.stbtt_InitFont(font, buffer);
         this.fontScale = STBTruetype.stbtt_ScaleForPixelHeight(font, pixelHeight);
         this.characterScale = (float) 1 / pixelHeight;
@@ -56,7 +57,7 @@ public class Font implements Disposable {
         STBTTPackContext packContext = STBTTPackContext.create();
 
         STBTruetype.stbtt_PackBegin(packContext, this.textureData, width, height, 0, 1);
-        STBTruetype.stbtt_PackSetOversampling(packContext, 2, 2);
+        STBTruetype.stbtt_PackSetOversampling(packContext, overSampling, overSampling);
         STBTruetype.stbtt_PackFontRange(packContext, buffer, 0, pixelHeight, START_CHAR, charBuffer);
         STBTruetype.stbtt_PackEnd(packContext);
 
@@ -82,8 +83,7 @@ public class Font implements Disposable {
                 characterData[i] = new Character(i,
                         new Vector4f(quad.x0(), quad.y0(), quad.x1(), quad.y1()),
                         new Vector4f(quad.s0(), quad.t0(), quad.s1(), quad.t1()),
-                        xPos.get(0) - lastXPos, quad.y1());
-                System.out.println((char) (i+START_CHAR)+" "+(i+START_CHAR)+" "+characterData[i].texturePosition+" "+characterData[i].advance+" "+characterData[i].descent);
+                        xPos.get(0) - lastXPos - (quad.x1() - quad.x0()), quad.y1());
 
                 lastXPos = xPos.get(0);
             }
@@ -130,9 +130,14 @@ public class Font implements Disposable {
         return descent * scale;
     }
 
+    public float getKernAdvance(float scale, int codepointLeft, int codepointRight) {
+        return STBTruetype.stbtt_GetCodepointKernAdvance(font, codepointLeft, codepointRight);
+    }
+
     @Override
     public void dispose() {
         STBTruetype.stbtt_FreeBitmap(textureData);
+        font.free();
         this.texture.dispose();
     }
 }
