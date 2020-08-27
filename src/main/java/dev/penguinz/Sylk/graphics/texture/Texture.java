@@ -1,14 +1,17 @@
-package dev.penguinz.Sylk.assets;
+package dev.penguinz.Sylk.graphics.texture;
 
 import dev.penguinz.Sylk.util.Disposable;
 import dev.penguinz.Sylk.util.IOUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.stb.STBImageWrite;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -19,6 +22,13 @@ public class Texture implements Disposable {
     private int channels;
 
     private ByteBuffer data;
+
+    private final TextureParameter minFilter, magFilter;
+
+    public Texture(TextureParameter minFilter, TextureParameter magFilter) {
+        this.minFilter = minFilter;
+        this.magFilter = magFilter;
+    }
 
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, id);
@@ -47,12 +57,12 @@ public class Texture implements Disposable {
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL15.GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL15.GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter.glType);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter.glType);
 
         glTexImage2D(GL_TEXTURE_2D, 0, mapFormat(), width, height, 0, mapFormat(), GL_UNSIGNED_BYTE, data);
 
-        STBImage.stbi_image_free(data);
+        MemoryUtil.memFree(data);
     }
 
     private int mapFormat() {
@@ -66,6 +76,7 @@ public class Texture implements Disposable {
 
     public void setData(ByteBuffer data, int width, int height, int channels) {
         this.data = data;
+
         this.width = width;
         this.height = height;
         this.channels = channels;

@@ -2,11 +2,7 @@ package dev.penguinz.Sylk.graphics.shader.uniforms;
 
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
-
-import java.nio.FloatBuffer;
 
 public class ShaderUniformMat4 extends ShaderUniform<Matrix4f> {
 

@@ -1,6 +1,5 @@
 package dev.penguinz.Sylk.assets;
 
-import dev.penguinz.Sylk.assets.loaders.AssetLoader;
 import dev.penguinz.Sylk.assets.options.AssetOptions;
 
 public class AssetDescriptor<T> {

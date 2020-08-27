@@ -1,7 +1,7 @@
 package dev.penguinz.Sylk.ui;
 
 import dev.penguinz.Sylk.animation.values.AnimatableValue;
-import dev.penguinz.Sylk.assets.Texture;
+import dev.penguinz.Sylk.graphics.texture.Texture;
 import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;

@@ -2,7 +2,6 @@ package dev.penguinz.Sylk.graphics.shader.uniforms;
 
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.util.maths.Vector2;
-import org.joml.Vector4f;
 import org.lwjgl.opengl.GL20;
 
 public class ShaderUniformVec2 extends ShaderUniform<Vector2> {

@@ -1,15 +1,15 @@
 package dev.penguinz.SylkTests;
 
-import dev.penguinz.Sylk.*;
-import dev.penguinz.Sylk.assets.Texture;
+import dev.penguinz.Sylk.Application;
+import dev.penguinz.Sylk.ApplicationBuilder;
+import dev.penguinz.Sylk.OrthographicCamera;
 import dev.penguinz.Sylk.event.Event;
-import dev.penguinz.Sylk.graphics.*;
+import dev.penguinz.Sylk.graphics.MainRenderer;
+import dev.penguinz.Sylk.graphics.Material;
+import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.input.Key;
-import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;
 import dev.penguinz.Sylk.util.maths.Transform;
-import dev.penguinz.Sylk.util.maths.Vector2;
-import org.joml.Vector2f;
 
 public class HelloTriangle implements Layer {
 

@@ -1,6 +1,9 @@
 package dev.penguinz.Sylk.util;
 
-import java.io.*;
+import org.lwjgl.system.MemoryUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public class IOUtils {
@@ -11,7 +14,7 @@ public class IOUtils {
         try(InputStream stream = IOUtils.class.getClassLoader().getResourceAsStream(path)) {
             if(stream == null)
                 throw new RuntimeException("Asset does not exist: "+path);
-                buffer = ByteBuffer.allocateDirect(stream.available());
+                buffer = MemoryUtil.memAlloc(stream.available());
                 while(stream.available() > 1)
                     buffer.put((byte) stream.read());
                 buffer.flip();

@@ -1,7 +1,5 @@
 package dev.penguinz.Sylk.ui;
 
-import dev.penguinz.Sylk.event.Event;
-
 public interface UIEventListener {
 
     default void onMouseEnter() {}

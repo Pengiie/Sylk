@@ -2,11 +2,11 @@ package dev.penguinz.Sylk.ui.font;
 
 import dev.penguinz.Sylk.ui.constraints.UIConstraints;
 
-public class RatioTextHeight implements TextHeight {
+public class RelativeTextHeight implements TextHeight {
 
     private float ratio;
 
-    public RatioTextHeight(float ratio) {
+    public RelativeTextHeight(float ratio) {
         this.ratio = ratio;
     }
 

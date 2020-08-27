@@ -1,7 +1,7 @@
 package dev.penguinz.Sylk.graphics.shader;
 
-import dev.penguinz.Sylk.util.Disposable;
 import dev.penguinz.Sylk.graphics.shader.uniforms.ShaderUniform;
+import dev.penguinz.Sylk.util.Disposable;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
@@ -15,7 +15,6 @@ public class Shader implements Disposable {
     private final HashMap<String, ShaderUniform<?>> uniforms = new HashMap<>();
 
     public Shader(String vertexSource, String fragmentSource, List<ShaderUniform<?>> uniforms) {
-        System.out.println();
         uniforms.forEach(uniform -> this.uniforms.put(uniform.location, uniform));
 
         int vertexId = compileShader(vertexSource, GL20.GL_VERTEX_SHADER, "Vertex Shader");

@@ -1,7 +1,7 @@
 package dev.penguinz.Sylk.assets.loaders;
 
-import dev.penguinz.Sylk.ui.font.Font;
 import dev.penguinz.Sylk.assets.options.FontOptions;
+import dev.penguinz.Sylk.ui.font.Font;
 
 public class FontLoader implements AssetLoader<Font, FontOptions> {
 

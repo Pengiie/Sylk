@@ -1,6 +1,6 @@
 package dev.penguinz.Sylk.graphics;
 
-import dev.penguinz.Sylk.assets.Texture;
+import dev.penguinz.Sylk.graphics.texture.Texture;
 import dev.penguinz.Sylk.util.Color;
 
 public class Material {

@@ -2,7 +2,6 @@ package dev.penguinz.Sylk.util;
 
 import dev.penguinz.Sylk.ui.font.Character;
 import dev.penguinz.Sylk.ui.font.Font;
-import sun.awt.windows.WPrinterJob;
 
 import java.util.ArrayList;
 import java.util.List;

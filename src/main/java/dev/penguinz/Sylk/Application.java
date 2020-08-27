@@ -1,7 +1,6 @@
 package dev.penguinz.Sylk;
 
 import dev.penguinz.Sylk.assets.AssetManager;
-import dev.penguinz.Sylk.assets.options.AssetOptions;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.event.window.WindowCloseEvent;
 import dev.penguinz.Sylk.graphics.VAO;

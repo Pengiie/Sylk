@@ -5,6 +5,7 @@ import dev.penguinz.Sylk.assets.loaders.AssetLoader;
 import dev.penguinz.Sylk.assets.loaders.FontLoader;
 import dev.penguinz.Sylk.assets.loaders.TextureLoader;
 import dev.penguinz.Sylk.assets.options.AssetOptions;
+import dev.penguinz.Sylk.graphics.texture.Texture;
 import dev.penguinz.Sylk.ui.font.Font;
 import dev.penguinz.Sylk.util.Disposable;
 
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public class AssetManager implements Disposable {
 
@@ -32,7 +34,7 @@ public class AssetManager implements Disposable {
     }
 
     public AssetManager() {
-        this.executorService = Executors.newFixedThreadPool(10);
+        this.executorService =  Executors.newFixedThreadPool(10, r -> new Thread(r, "asset-manager"));
     }
 
     public boolean update() {

@@ -1,6 +1,5 @@
 package dev.penguinz.Sylk.input;
 
-import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.event.input.MouseClickEvent;
 import org.joml.Vector2f;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class InputManager {
 

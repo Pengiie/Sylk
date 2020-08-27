@@ -1,10 +1,9 @@
 package dev.penguinz.Sylk.graphics.shader.uniforms;
 
-import dev.penguinz.Sylk.assets.Texture;
+import dev.penguinz.Sylk.graphics.texture.Texture;
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 public class ShaderUniformSampler2D extends ShaderUniform<Texture> {

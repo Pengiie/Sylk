@@ -1,8 +1,8 @@
 package dev.penguinz.Sylk.graphics;
 
 import dev.penguinz.Sylk.Camera;
-import dev.penguinz.Sylk.util.Disposable;
 import dev.penguinz.Sylk.graphics.shader.Shader;
+import dev.penguinz.Sylk.util.Disposable;
 import dev.penguinz.Sylk.util.maths.Transform;
 
 import java.util.ArrayList;

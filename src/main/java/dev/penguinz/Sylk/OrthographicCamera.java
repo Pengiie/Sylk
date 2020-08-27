@@ -1,7 +1,5 @@
 package dev.penguinz.Sylk;
 
-import dev.penguinz.Sylk.Application;
-import dev.penguinz.Sylk.Camera;
 import dev.penguinz.Sylk.util.maths.Transform;
 import org.joml.Matrix4f;
 

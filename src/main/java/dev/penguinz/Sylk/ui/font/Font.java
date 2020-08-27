@@ -1,27 +1,29 @@
 package dev.penguinz.Sylk.ui.font;
 
-import dev.penguinz.Sylk.assets.Texture;
+import dev.penguinz.Sylk.graphics.texture.Texture;
+import dev.penguinz.Sylk.graphics.texture.TextureParameter;
 import dev.penguinz.Sylk.util.Disposable;
 import dev.penguinz.Sylk.util.IOUtils;
-
-import jdk.javadoc.internal.tool.Start;
 import org.joml.Vector4f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.*;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 
 public class Font implements Disposable {
 
     public final static int START_CHAR = 32;
 
-    private final Texture texture = new Texture();
+    private final Texture texture = new Texture(TextureParameter.LINEAR, TextureParameter.LINEAR);
     private ByteBuffer textureData;
 
     private STBTTFontinfo font;
-    private STBTTPackedchar.Buffer charBuffer;
 
     private Character[] characterData;
     
@@ -33,9 +35,8 @@ public class Font implements Disposable {
     public void loadAsync(String path, int charRange, int pixelHeight, int width, int height, int overSampling) {
         ByteBuffer buffer = IOUtils.loadFile(path);
         
-        this.textureData = ByteBuffer.allocateDirect(width * height);
-        
-        this.charBuffer = STBTTPackedchar.create(charRange);
+        this.textureData = MemoryUtil.memAlloc(width * height);
+
         this.characterData = new Character[charRange];
 
         this.font = STBTTFontinfo.malloc();
@@ -52,33 +53,31 @@ public class Font implements Disposable {
 
             this.lineHeight = ascent.get(0) - (this.descent = descent.get(0));
             this.newLineSpace = this.lineHeight + (this.lineGap = lineGap.get(0));
+
+            STBTTPackContext packContext = STBTTPackContext.mallocStack(stack);
+
+            STBTTPackedchar.Buffer charBuffer = STBTTPackedchar.mallocStack(charRange, stack);
+
+            STBTruetype.stbtt_PackBegin(packContext, this.textureData, width, height, 0, 1);
+            STBTruetype.stbtt_PackSetOversampling(packContext, overSampling, overSampling);
+            STBTruetype.stbtt_PackFontRange(packContext, buffer, 0, pixelHeight, START_CHAR, charBuffer);
+            STBTruetype.stbtt_PackEnd(packContext);
+
+            texture.setData(textureData, width, height, 1);
+            loadCharacterData(charBuffer);
         }
-
-        STBTTPackContext packContext = STBTTPackContext.create();
-
-        STBTruetype.stbtt_PackBegin(packContext, this.textureData, width, height, 0, 1);
-        STBTruetype.stbtt_PackSetOversampling(packContext, overSampling, overSampling);
-        STBTruetype.stbtt_PackFontRange(packContext, buffer, 0, pixelHeight, START_CHAR, charBuffer);
-        STBTruetype.stbtt_PackEnd(packContext);
-
-        STBImageWrite.stbi_write_png("testFont.png", width, height, 1, this.textureData, 0);
-
-
-        texture.setData(textureData, width, height, 1);
-        loadCharacterData();
     }
     
-    private void loadCharacterData() {
+    private void loadCharacterData(STBTTPackedchar.Buffer charBuffer) {
         float lastXPos = 0;
 
-        for (int i = 0; i < characterData.length; i++) {
-            try(MemoryStack stack = MemoryStack.stackPush()) {
-                FloatBuffer xPos = stack.mallocFloat(1);
-                FloatBuffer yPos = stack.mallocFloat(1);
+        try(MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer xPos = stack.mallocFloat(1);
+            FloatBuffer yPos = stack.mallocFloat(1);
 
-                STBTTAlignedQuad quad = STBTTAlignedQuad.mallocStack(stack);
-
-                STBTruetype.stbtt_GetPackedQuad(charBuffer, texture.getWidth(), texture.getHeight(), i, xPos, yPos, quad, false);
+            STBTTAlignedQuad quad = STBTTAlignedQuad.mallocStack(stack);
+            for (int i = 0; i < characterData.length; i++) {
+                STBTruetype.stbtt_GetPackedQuad(charBuffer, texture.getWidth(), texture.getHeight(), i, xPos, yPos, quad, true);
 
                 characterData[i] = new Character(i,
                         new Vector4f(quad.x0(), quad.y0(), quad.x1(), quad.y1()),
@@ -136,7 +135,6 @@ public class Font implements Disposable {
 
     @Override
     public void dispose() {
-        STBTruetype.stbtt_FreeBitmap(textureData);
         font.free();
         this.texture.dispose();
     }

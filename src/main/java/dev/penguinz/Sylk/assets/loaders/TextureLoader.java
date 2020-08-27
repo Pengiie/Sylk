@@ -1,16 +1,17 @@
 package dev.penguinz.Sylk.assets.loaders;
 
-import dev.penguinz.Sylk.assets.Texture;
+import dev.penguinz.Sylk.graphics.texture.Texture;
 import dev.penguinz.Sylk.assets.options.TextureOptions;
 
 public class TextureLoader implements AssetLoader<Texture, TextureOptions> {
 
-    private final Texture texture = new Texture();
+    private Texture texture;
 
     @Override
     public void loadAsync(String path, TextureOptions options) {
         if(options == null)
             options = new TextureOptions();
+        this.texture = new Texture(options.minFilter, options.magFilter);
         this.texture.loadAsync(path);
     }
 

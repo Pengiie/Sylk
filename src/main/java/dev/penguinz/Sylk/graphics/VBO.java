@@ -1,7 +1,7 @@
 package dev.penguinz.Sylk.graphics;
 
-import dev.penguinz.Sylk.util.Disposable;
 import dev.penguinz.Sylk.util.BufferUtils;
+import dev.penguinz.Sylk.util.Disposable;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;

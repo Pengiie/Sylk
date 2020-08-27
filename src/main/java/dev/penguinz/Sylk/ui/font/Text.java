@@ -1,6 +1,5 @@
 package dev.penguinz.Sylk.ui.font;
 
-import dev.penguinz.Sylk.assets.Texture;
 import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.graphics.VBO;
 import dev.penguinz.Sylk.graphics.VBOType;

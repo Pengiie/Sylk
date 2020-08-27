@@ -1,6 +1,6 @@
-package dev.penguinz.Sylk.ui.font;
+package dev.penguinz.Sylk.util;
 
-public enum TextAlignment {
+public enum Alignment {
 
            TOP,
     LEFT, CENTER, RIGHT,

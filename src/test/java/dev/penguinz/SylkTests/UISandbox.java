@@ -4,22 +4,18 @@ import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.ApplicationBuilder;
 import dev.penguinz.Sylk.animation.Animation;
 import dev.penguinz.Sylk.animation.Animator;
-import dev.penguinz.Sylk.assets.AssetManager;
-import dev.penguinz.Sylk.assets.Texture;
 import dev.penguinz.Sylk.assets.options.FontOptions;
-import dev.penguinz.Sylk.assets.options.TextureOptions;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.input.Key;
-import dev.penguinz.Sylk.ui.UIBlock;
 import dev.penguinz.Sylk.ui.UIButton;
 import dev.penguinz.Sylk.ui.UIContainer;
 import dev.penguinz.Sylk.ui.UIText;
 import dev.penguinz.Sylk.ui.constraints.*;
-import dev.penguinz.Sylk.ui.font.*;
+import dev.penguinz.Sylk.ui.font.Font;
+import dev.penguinz.Sylk.ui.font.RelativeTextHeight;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;
 import dev.penguinz.Sylk.util.RefContainer;
-import org.joml.Matrix4f;
 
 public class UISandbox implements Layer {
 
@@ -29,10 +25,10 @@ public class UISandbox implements Layer {
 
     private Animation increasePixels;
 
-    private RefContainer<Font> font = new RefContainer<>(null);
+    private final RefContainer<Font> font = new RefContainer<>(null);
 
     UIButton component = new UIButton(new Color(1, 0, 1), new Color(0, 1, 0),
-            new UIText("The Quick Brown Fox Jumped Over The Lazy Dog.", Color.white, font, new RatioTextHeight(0.3f)),
+            new UIText("The Quick Brown Fox Jumped Over The Lazy Dog.", Color.white, font, new RelativeTextHeight(0.3f)),
             () -> Application.getInstance().getLogger().logInfo("Button has been clicked"));
 
     @Override

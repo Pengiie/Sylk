@@ -1,6 +1,5 @@
 package dev.penguinz.Sylk.ui.font;
 
-import dev.penguinz.Sylk.util.maths.Vector2;
 import org.joml.Vector4f;
 
 public class Character {

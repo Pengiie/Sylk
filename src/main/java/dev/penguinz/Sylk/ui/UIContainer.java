@@ -1,11 +1,9 @@
 package dev.penguinz.Sylk.ui;
 
 import dev.penguinz.Sylk.Application;
-import dev.penguinz.Sylk.Camera;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.event.input.MouseClickEvent;
 import dev.penguinz.Sylk.event.window.WindowResizeEvent;
-import dev.penguinz.Sylk.graphics.Renderer;
 import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
@@ -18,7 +16,10 @@ import dev.penguinz.Sylk.util.maths.Vector2;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class UIContainer extends UIComponent implements Disposable {
 

@@ -4,9 +4,7 @@ import dev.penguinz.Sylk.animation.values.AnimatableColor;
 import dev.penguinz.Sylk.animation.values.AnimatableValue;
 import dev.penguinz.Sylk.ui.constraints.RelativeConstraint;
 import dev.penguinz.Sylk.ui.constraints.UIConstraints;
-import dev.penguinz.Sylk.ui.font.Text;
 import dev.penguinz.Sylk.util.Color;
-import jdk.nashorn.internal.objects.annotations.Getter;
 
 public class UIButton extends UIBlock implements UIEventListener {
 

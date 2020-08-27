@@ -1,56 +1,50 @@
 package dev.penguinz.Sylk.ui;
 
-import dev.penguinz.Sylk.animation.values.AnimatableValue;
 import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
-import dev.penguinz.Sylk.ui.constraints.PixelConstraint;
 import dev.penguinz.Sylk.ui.font.*;
 import dev.penguinz.Sylk.util.Color;
-import dev.penguinz.Sylk.util.MatrixUtils;
 import dev.penguinz.Sylk.util.RefContainer;
+import dev.penguinz.Sylk.util.Alignment;
 import dev.penguinz.Sylk.util.TextUtils;
-import dev.penguinz.Sylk.util.maths.Vector2;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class UIText extends UIComponent implements UIFontRenderable {
 
-    public final List<Text> texts = new ArrayList<>();
+    private final List<Text> texts = new ArrayList<>();
 
     private String text;
     private Color color;
     private final RefContainer<Font> font;
     private TextHeight height;
     private boolean wrapText;
-    public TextAlignment horizontalAlignment, verticalAlignment;
+    public Alignment horizontalAlignment, verticalAlignment;
 
     private boolean loadedTexts = false;
     private float previousHeight;
 
     public UIText(String text, Font font, TextHeight height) {
-        this(text, Color.black, new RefContainer<>(font), height, true, TextAlignment.CENTER, TextAlignment.CENTER);
+        this(text, Color.black, new RefContainer<>(font), height, true, Alignment.CENTER, Alignment.CENTER);
     }
 
     public UIText(String text, Color color, Font font, TextHeight height) {
-        this(text, color, new RefContainer<>(font), height, true, TextAlignment.CENTER, TextAlignment.CENTER);
+        this(text, color, new RefContainer<>(font), height, true, Alignment.CENTER, Alignment.CENTER);
     }
 
     public UIText(String text, Color color, RefContainer<Font> font, TextHeight height) {
-        this(text, color, font, height, true, TextAlignment.CENTER, TextAlignment.CENTER);
+        this(text, color, font, height, true, Alignment.CENTER, Alignment.CENTER);
     }
 
     public UIText(String text, RefContainer<Font> font, TextHeight height) {
-        this(text, Color.black, font, height, true, TextAlignment.CENTER, TextAlignment.CENTER);
+        this(text, Color.black, font, height, true, Alignment.CENTER, Alignment.CENTER);
     }
 
-    public UIText(String text, Color color, RefContainer<Font> font, TextHeight height, boolean wrapText, TextAlignment horizontalAlignment, TextAlignment verticalAlignment) {
+    public UIText(String text, Color color, RefContainer<Font> font, TextHeight height, boolean wrapText, Alignment horizontalAlignment, Alignment verticalAlignment) {
         this.text = text;
         this.color = color;
         this.font = font;
@@ -75,6 +69,11 @@ public class UIText extends UIComponent implements UIFontRenderable {
                     break;
             }
         loadedTexts = true;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+        loadedTexts = false;
     }
 
     @Override
@@ -102,20 +101,20 @@ public class UIText extends UIComponent implements UIFontRenderable {
         float totalHeight = texts.size() * font.value.getNewLineSpace(font.value.getFontScale(pixelHeight)) + font.value.getLineGap(font.value.getFontScale(pixelHeight)) - font.value.getDescent(font.value.getFontScale(pixelHeight));
         float height = this.getConstraints().getHeightConstraintValue();
         float yPos = this.getConstraints().getYConstraintValue();
-        if(verticalAlignment == TextAlignment.CENTER)
+        if(verticalAlignment == Alignment.CENTER)
             yPos = yPos + height/2 - totalHeight/2;
-        if(verticalAlignment == TextAlignment.BOTTOM)
+        if(verticalAlignment == Alignment.BOTTOM)
             yPos = yPos + height - totalHeight;
 
         int i = 0;
         for (Text text: texts) {
             Matrix4f translation = new Matrix4f();
 
-            if(horizontalAlignment == TextAlignment.LEFT)
+            if(horizontalAlignment == Alignment.LEFT)
                 translation.m30(xPos);
-            if(horizontalAlignment == TextAlignment.CENTER)
+            if(horizontalAlignment == Alignment.CENTER)
                 translation.m30(xPos + width/2 - text.getWidth()/2);
-            if(horizontalAlignment == TextAlignment.RIGHT)
+            if(horizontalAlignment == Alignment.RIGHT)
                 translation.m30(xPos + width - text.getWidth());
 
             translation.m31(yPos + i * font.value.getNewLineSpace(font.value.getFontScale(pixelHeight)));
