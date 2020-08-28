@@ -35,7 +35,6 @@ public class MainShader {
                 "#version 400 core\n" +
                 "in vec2 pass_texCoord;\n"+
                 "out vec4 fragColor;\n" +
-                "uniform bool "+UniformConstants.glows+";\n"+
                 "uniform vec4 "+UniformConstants.color+";\n"+
                 "uniform bool "+UniformConstants.hasTexture+";\n"+
                 "uniform sampler2D "+UniformConstants.texture0 +";\n"+

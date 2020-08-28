@@ -9,21 +9,26 @@ import dev.penguinz.Sylk.graphics.Material;
 import dev.penguinz.Sylk.graphics.RenderLayer;
 import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.graphics.post.effects.BloomEffect;
+import dev.penguinz.Sylk.graphics.post.effects.VignetteEffect;
 import dev.penguinz.Sylk.input.Key;
 import dev.penguinz.Sylk.util.Layer;
 import dev.penguinz.Sylk.util.maths.Transform;
+import dev.penguinz.Sylk.util.maths.Vector2;
 
 public class HelloTriangle implements Layer {
 
     private OrthographicCamera camera;
     private MainRenderer renderer;
+    private MainRenderer renderer2;
 
     @Override
     public void init() {
         this.camera = new OrthographicCamera();
         this.renderer = new MainRenderer();
+        this.renderer2 = new MainRenderer(RenderLayer.RENDER1);
 
-        Application.getInstance().addPostEffect(RenderLayer.RENDER0, new BloomEffect(6, 2, 0.3f));
+        Application.getInstance().addPostEffect(RenderLayer.RENDER0, new BloomEffect(camera, 30f, 12, 1f));
+        Application.getInstance().addPostEffect(RenderLayer.RENDER0, new VignetteEffect(0.6f, 0.4f));
     }
 
     @Override
@@ -36,8 +41,12 @@ public class HelloTriangle implements Layer {
     @Override
     public void render() {
         this.renderer.begin(camera);
-        this.renderer.render(VAO.triangle, new Transform(), new Material());
+        this.renderer.render(VAO.quad, new Transform(), new Material());
         this.renderer.finish();
+
+        this.renderer2.begin(camera);
+        this.renderer2.render(VAO.triangle, new Transform(new Vector2(-1, -0.5f)), new Material());
+        this.renderer2.finish();
     }
 
     @Override

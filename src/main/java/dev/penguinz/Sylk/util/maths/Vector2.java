@@ -17,6 +17,14 @@ public class Vector2 {
     }
 
     /**
+     * Creates a new {@link Vector2} and initializes its components to the given value.
+     * @param value the value to initialize both components to;
+     */
+    public Vector2(float value) {
+        this(value, value);
+    }
+
+    /**
      * Creates a new {@link Vector2} and initializes its components with the given values.
      * @param x the x component.
      * @param y the y component.

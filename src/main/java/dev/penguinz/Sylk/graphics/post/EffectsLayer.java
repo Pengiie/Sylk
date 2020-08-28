@@ -57,13 +57,15 @@ public class EffectsLayer implements Disposable {
     public void bindBuffer() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, fbo);
     }
+
     public int process() {
         int workingTexture = texture;
         for (PostEffect effect : effects) {
-            effect.clearBuffers();
+            //effect.clearBuffers();
+            System.out.println(effect.getClass().getSimpleName());
             workingTexture = effect.processEffect(workingTexture);
+            System.out.println(workingTexture);
         }
-        System.out.println(workingTexture);
         return workingTexture;
     }
 

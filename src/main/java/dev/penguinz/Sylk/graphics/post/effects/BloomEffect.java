@@ -1,6 +1,8 @@
 package dev.penguinz.Sylk.graphics.post.effects;
 
 import dev.penguinz.Sylk.Application;
+import dev.penguinz.Sylk.Camera;
+import dev.penguinz.Sylk.OrthographicCamera;
 import dev.penguinz.Sylk.animation.values.AnimatableFloat;
 import dev.penguinz.Sylk.animation.values.AnimatableInt;
 import dev.penguinz.Sylk.event.Event;
@@ -25,6 +27,9 @@ public class BloomEffect implements PostEffect {
     private final AnimatableInt strength;
     private final AnimatableFloat opacity;
 
+    private final OrthographicCamera camera;
+    private final float startWidth, startHeight;
+
     private final Shader splitShader;
     private int splitBuffer, splitTexture1, splitTexture2;
 
@@ -35,7 +40,11 @@ public class BloomEffect implements PostEffect {
     private final Shader blendShader;
     private int finalBuffer, finalTexture;
 
-    public BloomEffect(float size, int strength, float opacity) {
+    public BloomEffect(OrthographicCamera camera, float size, int strength, float opacity) {
+        this.camera = camera;
+        this.startWidth = Application.getInstance().getWindowWidth();
+        this.startHeight = Application.getInstance().getWindowHeight();
+
         this.size = new AnimatableFloat(size);
         this.strength = new AnimatableInt(strength);
         this.opacity = new AnimatableFloat(opacity);
@@ -95,8 +104,8 @@ public class BloomEffect implements PostEffect {
     private void setTextureParams() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL15.GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL15.GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
 
     @Override
@@ -110,13 +119,15 @@ public class BloomEffect implements PostEffect {
 
         boolean horizontal = true;
         boolean firstIteration = true;
-        int blurAmount = strength.value * 10;
+        int blurAmount = strength.value * 2;
 
         blurShader.use();
-        blurShader.loadUniform(BlurShader.size, size.value * 2);
 
         for (int i = 0; i < blurAmount; i++) {
             GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurFrameBuffers[horizontal ? 1 : 0]);
+            blurShader.loadUniform(BlurShader.size,
+                    size.value * camera.zoom *
+                            (horizontal ? Application.getInstance().getWindowWidth() / startWidth : Application.getInstance().getWindowHeight()/startHeight));
             blurShader.loadUniform(BlurShader.horizontal, horizontal);
             GL30.glActiveTexture(GL13.GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, firstIteration ? splitTexture2 : blurTextures[horizontal ? 0 : 1]);
@@ -159,6 +170,8 @@ public class BloomEffect implements PostEffect {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurTextures[0]);
         glClear(GL_COLOR_BUFFER_BIT);
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurTextures[1]);
+        glClear(GL_COLOR_BUFFER_BIT);
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, finalBuffer);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
@@ -257,23 +270,24 @@ public class BloomEffect implements PostEffect {
                             "uniform sampler2D "+UniformConstants.texture0 +";\n"+
                             "uniform bool "+ BlurShader.horizontal +";\n"+
                             "uniform float "+BlurShader.size +";\n"+
-                            "uniform float weights[7] = float [] (0.277027, 0.1945946, 0.1216216, 0.054054, 0.016216, 0.006216, 0.002216);\n"+
+                            "uniform float weights[6] = float [] (0.198596, 0.175713, 0.121703, 0.065984, 0.028002, 0.0093);\n"+
+                            "uniform float offsets[6] = float [] (0, 0.1, 0.3, 0.8, 1.5, 3.0);\n"+
                             "void main()\n"+
                             "{\n" +
-                            "  vec2 texOffset = "+BlurShader.size +" / textureSize("+ UniformConstants.texture0+", 0);\n"+
+                            "  vec2 texSize = 1.0 / textureSize("+ UniformConstants.texture0+", 0);\n"+
                             "  vec3 result = texture("+UniformConstants.texture0+", pass_texCoord).rgb * weights[0];\n"+
                             "  if("+ BlurShader.horizontal+") {\n"+
-                            "    for(int i = 1; i < 7; ++i) {\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(texOffset.x * i, 0.0)).rgb * weights[i];\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(texOffset.x * i, 0.0)).rgb * weights[i];\n"+
+                            "    for(int i = 1; i < 6; ++i) {\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(offsets[i] * texSize.x * "+BlurShader.size+", 0.0)).rgb * weights[i];\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(offsets[i] * texSize.x * "+BlurShader.size+", 0.0)).rgb * weights[i];\n"+
                             "    }\n"+
                             "  } else {\n"+
-                            "    for(int i = 1; i < 7; ++i) {\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(0.0, texOffset.y * i)).rgb * weights[i];\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(0.0, texOffset.y * i)).rgb * weights[i];\n"+
+                            "    for(int i = 1; i < 6; ++i) {\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")).rgb * weights[i];\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")).rgb * weights[i];\n"+
                             "    }\n"+
                             "  }\n"+
-                            "  fragColor = vec4(result, 1);\n" +
+                            "  fragColor = vec4(result, 1.0);\n" +
                             "}\n", uniforms);
         }
 
