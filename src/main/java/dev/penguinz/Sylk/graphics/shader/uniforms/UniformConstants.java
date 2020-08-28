@@ -12,5 +12,10 @@ public class UniformConstants {
     public static final String texture0 = "u_texture0";
     public static final String texture1 = "u_texture1";
     public static final String texture2 = "u_texture2";
+    public static final String texture3 = "u_texture3";
+    public static final String texture4 = "u_texture4";
+    public static final String texture5 = "u_texture5";
+    public static final String texture6 = "u_texture6";
+    public static final String texture7 = "u_texture7";
 
 }

@@ -6,7 +6,9 @@ import dev.penguinz.Sylk.OrthographicCamera;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.graphics.MainRenderer;
 import dev.penguinz.Sylk.graphics.Material;
+import dev.penguinz.Sylk.graphics.RenderLayer;
 import dev.penguinz.Sylk.graphics.VAO;
+import dev.penguinz.Sylk.graphics.post.effects.BloomEffect;
 import dev.penguinz.Sylk.input.Key;
 import dev.penguinz.Sylk.util.Layer;
 import dev.penguinz.Sylk.util.maths.Transform;
@@ -20,6 +22,8 @@ public class HelloTriangle implements Layer {
     public void init() {
         this.camera = new OrthographicCamera();
         this.renderer = new MainRenderer();
+
+        Application.getInstance().addPostEffect(RenderLayer.RENDER0, new BloomEffect(6, 2, 0.3f));
     }
 
     @Override
@@ -31,17 +35,14 @@ public class HelloTriangle implements Layer {
 
     @Override
     public void render() {
-        Material mat = new Material();
-        mat.glows = true;
         this.renderer.begin(camera);
-        this.renderer.render(VAO.triangle, new Transform(), mat);
+        this.renderer.render(VAO.triangle, new Transform(), new Material());
         this.renderer.finish();
     }
 
     @Override
     public void onEvent(Event event) {
         camera.onEvent(event);
-        this.renderer.onEvent(event);
     }
 
     @Override

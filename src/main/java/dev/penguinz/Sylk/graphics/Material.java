@@ -7,7 +7,6 @@ public class Material {
 
     public Color color;
     public Texture texture;
-    public boolean glows;
 
     public Material() {
         this(new Color(Color.white), null);

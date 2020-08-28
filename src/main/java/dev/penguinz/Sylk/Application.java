@@ -3,7 +3,10 @@ package dev.penguinz.Sylk;
 import dev.penguinz.Sylk.assets.AssetManager;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.event.window.WindowCloseEvent;
+import dev.penguinz.Sylk.graphics.ApplicationRenderer;
+import dev.penguinz.Sylk.graphics.RenderLayer;
 import dev.penguinz.Sylk.graphics.VAO;
+import dev.penguinz.Sylk.graphics.post.effects.PostEffect;
 import dev.penguinz.Sylk.input.InputManager;
 import dev.penguinz.Sylk.logging.LogLevel;
 import dev.penguinz.Sylk.logging.Logger;
@@ -23,6 +26,7 @@ public class Application {
 
     private Logger logger;
     private Window window;
+    private ApplicationRenderer renderer;
     private AssetManager assetManager;
     private final List<Layer> layers = new ArrayList<>();
 
@@ -55,6 +59,9 @@ public class Application {
             event.handle();
         }
 
+        if(this.renderer != null)
+            this.renderer.onEvent(event);
+
         if(!event.isHandled()) {
             for (Layer layer : layers) {
                 if(event.isHandled())
@@ -72,6 +79,8 @@ public class Application {
 
         this.window = new Window(properties.title, properties.width, properties.height, properties.resizable, properties.fullscreen);
 
+        this.renderer = new ApplicationRenderer();
+
         attachLayers(properties.startupLayers);
 
         while(isRunning) {
@@ -88,6 +97,8 @@ public class Application {
                 layer.render();
             }
 
+            this.renderer.render();
+
             window.update();
         }
         dispose();
@@ -96,6 +107,7 @@ public class Application {
     private void dispose() {
         window.dispose();
         assetManager.dispose();
+        renderer.dispose();
         VAO.quad.dispose();
         VAO.triangle.dispose();
     }
@@ -168,6 +180,14 @@ public class Application {
      */
     public int getFps() {
         return fps;
+    }
+
+    public void bindRenderLayer(RenderLayer layer) {
+        this.renderer.renderToLayer(layer);
+    }
+
+    public void addPostEffect(RenderLayer layer, PostEffect effect) {
+        this.renderer.addEffect(layer, effect);
     }
 
     /**

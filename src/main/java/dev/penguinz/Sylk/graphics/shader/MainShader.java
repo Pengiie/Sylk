@@ -11,7 +11,6 @@ public class MainShader {
 
     static {
         uniforms.add(new ShaderUniformVec4(UniformConstants.color));
-        uniforms.add(new ShaderUniformBool(UniformConstants.glows));
         uniforms.add(new ShaderUniformBool(UniformConstants.hasTexture));
         uniforms.add(new ShaderUniformSampler2D(UniformConstants.texture0));
 
@@ -35,8 +34,7 @@ public class MainShader {
                 ,
                 "#version 400 core\n" +
                 "in vec2 pass_texCoord;\n"+
-                "layout (location = 0) out vec4 fragColor;\n" +
-                "layout (location = 1) out vec4 glowColor;\n" +
+                "out vec4 fragColor;\n" +
                 "uniform bool "+UniformConstants.glows+";\n"+
                 "uniform vec4 "+UniformConstants.color+";\n"+
                 "uniform bool "+UniformConstants.hasTexture+";\n"+
@@ -47,11 +45,9 @@ public class MainShader {
                 "  if("+UniformConstants.hasTexture+") {\n"+
                 "    textureColor = texture("+UniformConstants.texture0 +", pass_texCoord);\n"+
                 "  }\n"+
+                "  if(textureColor.a < 0.1)\n"+
+                "    discard;\n"+
                 "  fragColor = textureColor * "+UniformConstants.color+";\n" +
-                "  if("+UniformConstants.glows+")\n"+
-                "    glowColor = vec4(fragColor.rgb, 1);\n"+
-                "  else\n"+
-                "    glowColor = vec4(0, 0, 0, 1);\n"+
                 "}\n", uniforms);
     }
 

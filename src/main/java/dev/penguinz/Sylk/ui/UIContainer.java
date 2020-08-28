@@ -4,6 +4,7 @@ import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.event.input.MouseClickEvent;
 import dev.penguinz.Sylk.event.window.WindowResizeEvent;
+import dev.penguinz.Sylk.graphics.RenderLayer;
 import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
@@ -28,15 +29,23 @@ public class UIContainer extends UIComponent implements Disposable {
     private final Shader shader;
     private final Shader fontShader;
 
+    private RenderLayer renderLayer;
+
     public UIContainer() {
+        this(RenderLayer.UI0);
+    }
+
+    public UIContainer(RenderLayer layer) {
         this.shader = UIShader.create();
         this.fontShader = FontShader.create();
+        this.renderLayer = layer;
 
         updateProjection();
         updateScreenConstraints();
     }
 
     public void render() {
+        Application.getInstance().bindRenderLayer(renderLayer);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         fontShader.use();
