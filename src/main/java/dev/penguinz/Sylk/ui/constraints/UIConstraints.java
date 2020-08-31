@@ -1,5 +1,7 @@
 package dev.penguinz.Sylk.ui.constraints;
 
+import dev.penguinz.Sylk.ui.UIContainer;
+
 public class UIConstraints {
 
     private Constraint xConstraint;
@@ -100,5 +102,13 @@ public class UIConstraints {
             case Y: case HEIGHT: return getHeightConstraintValue();
         }
         return 0;
+    }
+
+    public static UIConstraints getFullConstraints() {
+        return new UIConstraints().
+                setXConstraint(new PixelConstraint(0)).
+                setYConstraint(new PixelConstraint(0)).
+                setWidthConstraint(new RelativeConstraint(1)).
+                setHeightConstraint(new RelativeConstraint(1));
     }
 }

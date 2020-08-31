@@ -38,13 +38,14 @@ public class VignetteEffect implements PostEffect {
 
     private void createBuffers() {
         this.finalBuffer = GL30.glGenFramebuffers();
-        this.finalTexture = glGenTextures();
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, finalBuffer);
+
+        this.finalTexture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, finalTexture);
         glTexImage2D(
                 GL_TEXTURE_2D, 0, GL_RGBA,
                 (int) Application.getInstance().getWindowWidth(), (int) Application.getInstance().getWindowHeight(),
-                0, GL_RGBA, GL_FLOAT, (ByteBuffer) null);
+                0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL15.GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL15.GL_CLAMP_TO_EDGE);
@@ -52,6 +53,7 @@ public class VignetteEffect implements PostEffect {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, finalTexture, 0);
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
     private void disposeBuffers() {
@@ -63,13 +65,14 @@ public class VignetteEffect implements PostEffect {
     public int processEffect(int workingTexture) {
         vignetteShader.use();
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, finalBuffer);
-        GL30.glActiveTexture(GL13.GL_TEXTURE0);
+        GL30.glActiveTexture(GL30.GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, workingTexture);
         vignetteShader.loadUniform(UniformConstants.resolution, new Vector2(Application.getInstance().getWindowWidth(), Application.getInstance().getWindowHeight()));
         vignetteShader.loadUniform(VignetteShader.radius, radius.value);
         vignetteShader.loadUniform(VignetteShader.softness, softness.value);
         vignetteShader.loadUniform(VignetteShader.opacity, 1f);
         GL11.glDrawArrays(GL_TRIANGLES, 0, ApplicationRenderer.screenQuad.getVertexCount());
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
         return finalTexture;
     }
 
@@ -77,6 +80,7 @@ public class VignetteEffect implements PostEffect {
     public void clearBuffers() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, finalBuffer);
         glClear(GL_COLOR_BUFFER_BIT);
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
     @Override

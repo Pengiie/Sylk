@@ -20,8 +20,7 @@ public class Font implements Disposable {
 
     public final static int START_CHAR = 32;
 
-    private final Texture texture = new Texture(TextureParameter.LINEAR, TextureParameter.LINEAR);
-    private ByteBuffer textureData;
+    private final Texture texture = new Texture(TextureParameter.LINEAR_NEAREST, TextureParameter.LINEAR);
 
     private STBTTFontinfo font;
 
@@ -34,8 +33,8 @@ public class Font implements Disposable {
 
     public void loadAsync(String path, int charRange, int pixelHeight, int width, int height, int overSampling) {
         ByteBuffer buffer = IOUtils.loadFile(path);
-        
-        this.textureData = MemoryUtil.memAlloc(width * height);
+
+        ByteBuffer textureData = MemoryUtil.memAlloc(width * height);
 
         this.characterData = new Character[charRange];
 
@@ -58,7 +57,7 @@ public class Font implements Disposable {
 
             STBTTPackedchar.Buffer charBuffer = STBTTPackedchar.mallocStack(charRange, stack);
 
-            STBTruetype.stbtt_PackBegin(packContext, this.textureData, width, height, 0, 1);
+            STBTruetype.stbtt_PackBegin(packContext, textureData, width, height, 0, 1);
             STBTruetype.stbtt_PackSetOversampling(packContext, overSampling, overSampling);
             STBTruetype.stbtt_PackFontRange(packContext, buffer, 0, pixelHeight, START_CHAR, charBuffer);
             STBTruetype.stbtt_PackEnd(packContext);

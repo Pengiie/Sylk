@@ -5,6 +5,7 @@ import dev.penguinz.Sylk.event.window.WindowResizeEvent;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.MatrixUtils;
 import dev.penguinz.Sylk.util.maths.Transform;
+import dev.penguinz.Sylk.util.maths.Vector2;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
@@ -49,5 +50,7 @@ public abstract class Camera {
     }
 
     protected abstract Matrix4f createProjectionMatrix();
+
+    public abstract Vector2 convertToWorldCoordinates(Vector2 screenCoordinates);
 
 }

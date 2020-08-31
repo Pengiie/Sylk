@@ -53,7 +53,8 @@ public abstract class Renderer implements Disposable {
      * Finishes rendering.
      */
     public void finish() {
-        flush();
+        if(!renderItems.isEmpty())
+            flush();
     }
 
     @Override

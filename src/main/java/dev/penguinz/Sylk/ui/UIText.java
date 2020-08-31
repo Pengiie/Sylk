@@ -10,6 +10,7 @@ import dev.penguinz.Sylk.util.Alignment;
 import dev.penguinz.Sylk.util.TextUtils;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class UIText extends UIComponent implements UIFontRenderable {
     private TextHeight height;
     private boolean wrapText;
     public Alignment horizontalAlignment, verticalAlignment;
+    public float lineThickness = 1;
 
     private boolean loadedTexts = false;
     private float previousHeight;
@@ -94,11 +96,12 @@ public class UIText extends UIComponent implements UIFontRenderable {
 
         shader.loadUniform(UniformConstants.color, color.toVector());
         shader.loadUniform(UniformConstants.texture0, font.value.getTexture());
+        shader.loadUniform(FontShader.lineThickness, lineThickness);
 
         float xPos = this.getConstraints().getXConstraintValue();
         float width = this.getConstraints().getWidthConstraintValue();
 
-        float totalHeight = texts.size() * font.value.getNewLineSpace(font.value.getFontScale(pixelHeight)) + font.value.getLineGap(font.value.getFontScale(pixelHeight)) - font.value.getDescent(font.value.getFontScale(pixelHeight));
+        float totalHeight = texts.size() * font.value.getNewLineSpace(font.value.getFontScale(pixelHeight)) - font.value.getDescent(font.value.getFontScale(pixelHeight)) * 2;
         float height = this.getConstraints().getHeightConstraintValue();
         float yPos = this.getConstraints().getYConstraintValue();
         if(verticalAlignment == Alignment.CENTER)

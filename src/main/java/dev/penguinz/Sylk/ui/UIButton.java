@@ -13,13 +13,12 @@ public class UIButton extends UIBlock implements UIEventListener {
 
     public UIText text;
 
-    public final Runnable onClick;
+    public Runnable onClick;
 
     public UIButton(Color color, Color hoverColor, UIText text, Runnable onClick) {
         super(color);
         this.hoverColor = new AnimatableColor(hoverColor);
         this.onClick = onClick;
-
         this.text = text;
 
         this.addComponent(

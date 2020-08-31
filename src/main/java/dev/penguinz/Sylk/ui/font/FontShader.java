@@ -11,10 +11,12 @@ public class FontShader {
     private static final List<ShaderUniform<?>> uniforms = new ArrayList<>();
 
     public static final String position = "u_position";
+    public static final String lineThickness = "u_thickness";
 
     static {
         uniforms.add(new ShaderUniformVec4(UniformConstants.color));
         uniforms.add(new ShaderUniformSampler2D(UniformConstants.texture0));
+        uniforms.add(new ShaderUniformFloat(FontShader.lineThickness));
 
         uniforms.add(new ShaderUniformMat4(UniformConstants.projectionMatrix));
         uniforms.add(new ShaderUniformMat4(FontShader.position));
@@ -39,13 +41,13 @@ public class FontShader {
                         "out vec4 fragColor;\n" +
                         "uniform vec4 "+UniformConstants.color+";\n"+
                         "uniform sampler2D "+UniformConstants.texture0 +";\n"+
+                        "uniform float "+FontShader.lineThickness+";\n"+
                         "void main()\n"+
                         "{\n" +
                         "  vec4 textureColor = texture("+UniformConstants.texture0 +", pass_texCoord);\n"+
-                        "  if(textureColor.r < 0.1)\n"+
+                        "  if(textureColor.r < 0.25)\n"+
                         "    discard;\n"+
-                        "  fragColor = "+UniformConstants.color+";\n" +
-                       // "  fragColor = vec4(1, 0, 0, 1);\n"+
+                        "  fragColor = vec4(1, 1, 1, textureColor.r * "+FontShader.lineThickness+") * "+UniformConstants.color+";\n" +
                         "}\n", uniforms);
     }
 

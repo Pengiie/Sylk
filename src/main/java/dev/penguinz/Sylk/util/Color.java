@@ -41,10 +41,10 @@ public class Color {
      * @param a alpha component.
      */
     public Color(float r, float g, float b, float a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
+        this.r = r > 1 ? r / 255 : r;
+        this.g = g > 1 ? g / 255 : g;
+        this.b = b > 1 ? b / 255 : b;
+        this.a = a > 1 ? a / 255 : a;
     }
 
     public Vector4f toVector() {

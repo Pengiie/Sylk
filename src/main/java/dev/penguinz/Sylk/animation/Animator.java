@@ -64,10 +64,14 @@ public class Animator {
             if(newTime >= animation.getTimeInSeconds())
                 toRemove.add(animation);
         }
-        toRemove.forEach(runningAnimations::remove);
+        toRemove.forEach(animation -> {
+            runningAnimations.remove(animation);
+            if(animation.hasCallback())
+                animation.getCallback().run();
+        });
     }
 
-    public <T> void updateAnimatableValue(float progress, Animation.AnimationData<T> animationData) {
+    private <T> void updateAnimatableValue(float progress, Animation.AnimationData<T> animationData) {
         if(interpolators.containsKey(animationData.value.getClassType())) {
             @SuppressWarnings("unchecked")
             Interpolator<T> interpolator = ((Interpolator<T>) interpolators.get(animationData.value.getClassType()));

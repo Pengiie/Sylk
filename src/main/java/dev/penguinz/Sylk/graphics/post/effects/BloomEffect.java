@@ -146,6 +146,7 @@ public class BloomEffect implements PostEffect {
         glBindTexture(GL_TEXTURE_2D, blurTextures[horizontal ? 0 : 1]);
         glDrawArrays(GL_TRIANGLES, 0, ApplicationRenderer.screenQuad.getVertexCount());
 
+        GL30.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
         return finalTexture;
     }
 
@@ -321,7 +322,10 @@ public class BloomEffect implements PostEffect {
                             "uniform sampler2D "+UniformConstants.texture1 +";\n"+
                             "void main()\n"+
                             "{\n" +
-                            "  fragColor = texture("+UniformConstants.texture0+", pass_texCoord) + texture("+UniformConstants.texture1+", pass_texCoord);\n" +
+                            "  vec4 combinedColor = texture("+UniformConstants.texture0+", pass_texCoord) + texture("+UniformConstants.texture1+", pass_texCoord);\n"+
+                            "  if(combinedColor.a < 0.1)\n"+
+                            "    discard;\n"+
+                            "  fragColor = combinedColor;\n"+
                             "}\n", uniforms);
             shader.use();
             shader.loadUniform(UniformConstants.texture0, 0);

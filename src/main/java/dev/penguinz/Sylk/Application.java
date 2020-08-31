@@ -53,6 +53,17 @@ public class Application {
         }
     }
 
+    public <T extends Layer> T getLayer(Class<T> layerClass) {
+        for (Layer layer : layers) {
+            if(layer.getClass().isAssignableFrom(layerClass)) {
+                @SuppressWarnings("unchecked")
+                T matchedLayer = (T) layer;
+                return matchedLayer;
+            }
+        }
+        throw new RuntimeException("Could not find layer of class: "+layerClass.getSimpleName());
+    }
+
     public void onEvent(Event event) {
         if(event instanceof WindowCloseEvent) {
             isRunning = false;

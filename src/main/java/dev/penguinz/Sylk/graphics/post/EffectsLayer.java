@@ -43,6 +43,7 @@ public class EffectsLayer implements Disposable {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
     private void disposeFrameBuffer() {
@@ -61,10 +62,8 @@ public class EffectsLayer implements Disposable {
     public int process() {
         int workingTexture = texture;
         for (PostEffect effect : effects) {
-            //effect.clearBuffers();
-            System.out.println(effect.getClass().getSimpleName());
+            effect.clearBuffers();
             workingTexture = effect.processEffect(workingTexture);
-            System.out.println(workingTexture);
         }
         return workingTexture;
     }
@@ -73,6 +72,7 @@ public class EffectsLayer implements Disposable {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, fbo);
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
     public void onEvent(Event event) {

@@ -4,6 +4,7 @@ import dev.penguinz.Sylk.util.Disposable;
 import dev.penguinz.Sylk.util.IOUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.stb.STBImageWrite;
 import org.lwjgl.system.MemoryStack;
@@ -61,6 +62,7 @@ public class Texture implements Disposable {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter.glType);
 
         glTexImage2D(GL_TEXTURE_2D, 0, mapFormat(), width, height, 0, mapFormat(), GL_UNSIGNED_BYTE, data);
+        GL30.glGenerateMipmap(GL_TEXTURE_2D);
 
         MemoryUtil.memFree(data);
     }

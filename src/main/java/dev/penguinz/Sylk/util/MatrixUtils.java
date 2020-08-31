@@ -10,7 +10,10 @@ public class MatrixUtils {
     public static Matrix4f createTransformMatrix(Transform transform) {
         Matrix4f matrix = new Matrix4f();
         matrix.translate(transform.position.x, transform.position.y, 0);
-        matrix.rotateAroundLocal(new Quaternionf().fromAxisAngleDeg(0,0, 1, transform.rotation), transform.rotationAnchor.x, transform.rotationAnchor.y, 0);
+        matrix.rotateAroundLocal(new Quaternionf().
+                fromAxisAngleRad(0,0, 1, transform.rotation),
+                transform.position.x + transform.rotationAnchor.x,
+                transform.position.y + transform.rotationAnchor.y, 0);
         matrix.scale(transform.getScale().x, transform.getScale().y, 1);
         return matrix;
     }

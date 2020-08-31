@@ -3,6 +3,7 @@ package dev.penguinz.Sylk.animation;
 import dev.penguinz.Sylk.animation.values.AnimatableValue;
 import dev.penguinz.Sylk.ui.constraints.AnimatableConstraint;
 
+import javax.security.auth.callback.Callback;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,6 +13,8 @@ public class Animation {
     private Set<AnimationData<?>> animationValues = new HashSet<>();
 
     private final float timeInSeconds;
+
+    private Runnable callback = null;
 
     private Animation reversedAnimation;
 
@@ -35,6 +38,11 @@ public class Animation {
         return this;
     }
 
+    public Animation setCompletionCallback(Runnable callback) {
+        this.callback = callback;
+        return this;
+    }
+
     private void updateReversedAnimation() {
         this.reversedAnimation = new Animation(this);
         this.reversedAnimation.animationValues = this.reversedAnimation.animationValues.stream().map(AnimationData::getReverse).collect(Collectors.toSet());
@@ -52,6 +60,14 @@ public class Animation {
 
     protected Set<AnimationData<?>> getAnimationValues() {
         return animationValues;
+    }
+
+    protected Runnable getCallback() {
+        return callback;
+    }
+
+    protected boolean hasCallback() {
+        return callback != null;
     }
 
     static class AnimationData<T> {
