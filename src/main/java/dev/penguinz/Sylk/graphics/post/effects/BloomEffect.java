@@ -127,6 +127,7 @@ public class BloomEffect implements PostEffect {
         for (int i = 0; i < blurAmount; i++) {
             GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurFrameBuffers[horizontal ? 1 : 0]);
             GL30.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
+            GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
             blurShader.loadUniform(BlurShader.size,
                     size.value * camera.zoom *
                             (horizontal ? Application.getInstance().getWindowWidth() / startWidth : Application.getInstance().getWindowHeight()/startHeight));
@@ -168,14 +169,18 @@ public class BloomEffect implements PostEffect {
     @Override
     public void clearBuffers() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, splitBuffer);
-        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
-        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT1, new float[] {0,0,0,0});
+        GL30.glDrawBuffers(new int[] {GL30.GL_COLOR_ATTACHMENT0, GL30.GL_COLOR_ATTACHMENT1});
+        GL30.glClearBufferfv(GL_COLOR, 1, new float[] {0,0,0,0});
+        GL30.glClearBufferfv(GL_COLOR, 1, new float[] {0,0,0,0});
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurFrameBuffers[0]);
-        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
+        GL30.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
+        GL30.glClearBufferfv(GL_COLOR, 0, new float[] {0,0,0,0});
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurFrameBuffers[1]);
-        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
+        GL30.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
+        GL30.glClearBufferfv(GL_COLOR, 0, new float[] {0,0,0,0});
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, finalBuffer);
-        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
+        GL30.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
+        GL30.glClearBufferfv(GL_COLOR, 0, new float[] {0,0,0,0});
     }
 
     @Override
@@ -290,7 +295,7 @@ public class BloomEffect implements PostEffect {
                             "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")) * weights[i];\n"+
                             "    }\n"+
                             "  }\n"+
-                            "  fragColor = vec4(result.rgb, result.a * 1.019);\n" +
+                            "  fragColor = vec4(result.rgb, 1.0);\n" +
                             "}\n", uniforms);
         }
 
