@@ -27,8 +27,8 @@ public class HelloTriangle implements Layer {
         this.renderer = new MainRenderer();
         this.renderer2 = new MainRenderer(RenderLayer.RENDER1);
 
-        Application.getInstance().addPostEffect(RenderLayer.RENDER0, new BloomEffect(camera, 30f, 12, 1f));
-        Application.getInstance().addPostEffect(RenderLayer.RENDER0, new VignetteEffect(0.6f, 0.4f));
+        Application.getInstance().addPostEffect(RenderLayer.RENDER1, new BloomEffect(camera, 30f, 12, 2f));
+        //Application.getInstance().addPostEffect(RenderLayer.RENDER1, new VignetteEffect(0.6f, 0.4f));
     }
 
     @Override

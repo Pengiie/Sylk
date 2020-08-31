@@ -24,7 +24,7 @@ public class VignetteEffect implements PostEffect {
     private AnimatableFloat radius;
     private AnimatableFloat softness;
 
-    private Shader vignetteShader;
+    private final Shader vignetteShader;
     private int finalBuffer, finalTexture;
 
     public VignetteEffect(float radius, float softness) {
@@ -45,7 +45,7 @@ public class VignetteEffect implements PostEffect {
         glTexImage2D(
                 GL_TEXTURE_2D, 0, GL_RGBA,
                 (int) Application.getInstance().getWindowWidth(), (int) Application.getInstance().getWindowHeight(),
-                0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+                0, GL_RGBA, GL_FLOAT, (ByteBuffer) null);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL15.GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL15.GL_CLAMP_TO_EDGE);
@@ -65,6 +65,7 @@ public class VignetteEffect implements PostEffect {
     public int processEffect(int workingTexture) {
         vignetteShader.use();
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, finalBuffer);
+        GL30.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, workingTexture);
         vignetteShader.loadUniform(UniformConstants.resolution, new Vector2(Application.getInstance().getWindowWidth(), Application.getInstance().getWindowHeight()));
@@ -72,14 +73,14 @@ public class VignetteEffect implements PostEffect {
         vignetteShader.loadUniform(VignetteShader.softness, softness.value);
         vignetteShader.loadUniform(VignetteShader.opacity, 1f);
         GL11.glDrawArrays(GL_TRIANGLES, 0, ApplicationRenderer.screenQuad.getVertexCount());
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        System.out.println(GL30.glGetInteger(GL30.GL_READ_FRAMEBUFFER_BINDING) +" drawing "+finalBuffer);
         return finalTexture;
     }
 
     @Override
     public void clearBuffers() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, finalBuffer);
-        glClear(GL_COLOR_BUFFER_BIT);
+        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
@@ -137,7 +138,7 @@ public class VignetteEffect implements PostEffect {
                             "  vec2 position = (gl_FragCoord.xy / "+UniformConstants.resolution+") - vec2(0.5);\n"+
                             "  float length = length(position);\n"+
                             "  float vignette = smoothstep("+VignetteShader.radius+", "+VignetteShader.softness+", length);\n"+
-                            "  fragColor = vec4(mix(texColor.rgb, texColor.rgb * vignette, "+VignetteShader.opacity+"), 1);\n"+
+                            "  fragColor = vec4(mix(texColor.rgb, texColor.rgb * vignette, "+VignetteShader.opacity+"), texColor.a);\n"+
                             "}\n", uniforms);
         }
 

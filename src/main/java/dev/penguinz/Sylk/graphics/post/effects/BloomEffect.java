@@ -114,6 +114,7 @@ public class BloomEffect implements PostEffect {
         splitShader.loadUniform(SplitShader.opacity, opacity.value);
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, splitBuffer);
         GL30.glDrawBuffers(new int[] {GL30.GL_COLOR_ATTACHMENT0, GL30.GL_COLOR_ATTACHMENT1});
+        GL30.glActiveTexture(GL30.GL_TEXTURE0);
         GL11.glBindTexture(GL_TEXTURE_2D, workingTexture);
         GL11.glDrawArrays(GL_TRIANGLES, 0, ApplicationRenderer.screenQuad.getVertexCount());
 
@@ -125,11 +126,11 @@ public class BloomEffect implements PostEffect {
 
         for (int i = 0; i < blurAmount; i++) {
             GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurFrameBuffers[horizontal ? 1 : 0]);
+            GL30.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
             blurShader.loadUniform(BlurShader.size,
                     size.value * camera.zoom *
                             (horizontal ? Application.getInstance().getWindowWidth() / startWidth : Application.getInstance().getWindowHeight()/startHeight));
             blurShader.loadUniform(BlurShader.horizontal, horizontal);
-            GL30.glActiveTexture(GL13.GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, firstIteration ? splitTexture2 : blurTextures[horizontal ? 0 : 1]);
             glDrawArrays(GL_TRIANGLES, 0, ApplicationRenderer.screenQuad.getVertexCount());
 
@@ -140,13 +141,13 @@ public class BloomEffect implements PostEffect {
 
         blendShader.use();
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, finalBuffer);
+        GL30.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
         GL30.glActiveTexture(GL13.GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, splitTexture1);
         GL30.glActiveTexture(GL13.GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, blurTextures[horizontal ? 0 : 1]);
         glDrawArrays(GL_TRIANGLES, 0, ApplicationRenderer.screenQuad.getVertexCount());
 
-        GL30.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
         return finalTexture;
     }
 
@@ -167,13 +168,14 @@ public class BloomEffect implements PostEffect {
     @Override
     public void clearBuffers() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, splitBuffer);
-        glClear(GL_COLOR_BUFFER_BIT);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurTextures[0]);
-        glClear(GL_COLOR_BUFFER_BIT);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurTextures[1]);
-        glClear(GL_COLOR_BUFFER_BIT);
+        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
+        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT1, new float[] {0,0,0,0});
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurFrameBuffers[0]);
+        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurFrameBuffers[1]);
+        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, finalBuffer);
-        glClear(GL_COLOR_BUFFER_BIT);
+        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
     }
 
     @Override
@@ -276,19 +278,19 @@ public class BloomEffect implements PostEffect {
                             "void main()\n"+
                             "{\n" +
                             "  vec2 texSize = 1.0 / textureSize("+ UniformConstants.texture0+", 0);\n"+
-                            "  vec3 result = texture("+UniformConstants.texture0+", pass_texCoord).rgb * weights[0];\n"+
+                            "  vec4 result = texture("+UniformConstants.texture0+", pass_texCoord) * weights[0];\n"+
                             "  if("+ BlurShader.horizontal+") {\n"+
                             "    for(int i = 1; i < 6; ++i) {\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(offsets[i] * texSize.x * "+BlurShader.size+", 0.0)).rgb * weights[i];\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(offsets[i] * texSize.x * "+BlurShader.size+", 0.0)).rgb * weights[i];\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(offsets[i] * texSize.x * "+BlurShader.size+", 0.0)) * weights[i];\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(offsets[i] * texSize.x * "+BlurShader.size+", 0.0)) * weights[i];\n"+
                             "    }\n"+
                             "  } else {\n"+
                             "    for(int i = 1; i < 6; ++i) {\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")).rgb * weights[i];\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")).rgb * weights[i];\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")) * weights[i];\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")) * weights[i];\n"+
                             "    }\n"+
                             "  }\n"+
-                            "  fragColor = vec4(result, 1.0);\n" +
+                            "  fragColor = vec4(result.rgb, result.a * 1.019);\n" +
                             "}\n", uniforms);
         }
 
@@ -322,10 +324,7 @@ public class BloomEffect implements PostEffect {
                             "uniform sampler2D "+UniformConstants.texture1 +";\n"+
                             "void main()\n"+
                             "{\n" +
-                            "  vec4 combinedColor = texture("+UniformConstants.texture0+", pass_texCoord) + texture("+UniformConstants.texture1+", pass_texCoord);\n"+
-                            "  if(combinedColor.a < 0.1)\n"+
-                            "    discard;\n"+
-                            "  fragColor = combinedColor;\n"+
+                            "  fragColor = texture("+UniformConstants.texture0+", pass_texCoord) + texture("+UniformConstants.texture1+", pass_texCoord);\n"+
                             "}\n", uniforms);
             shader.use();
             shader.loadUniform(UniformConstants.texture0, 0);

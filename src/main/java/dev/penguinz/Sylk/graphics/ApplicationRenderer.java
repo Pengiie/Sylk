@@ -70,22 +70,24 @@ public class ApplicationRenderer implements Disposable {
             if(usedLayers.contains(i))
                 usedTextures.add(layers[i].process());
         }
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
         shader.use();
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         glEnable(GL11.GL_BLEND);
         glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         for (int texture : usedTextures) {
             GL11.glBindTexture(GL_TEXTURE_2D, texture);
+            System.out.println("binding "+texture);
             glDrawArrays(GL_TRIANGLES, 0, screenQuad.getVertexCount());
         }
         glDisable(GL11.GL_BLEND);
         screenQuad.disableVertexAttribArrays();
         screenQuad.unbind();
-        for (EffectsLayer layer : layers) {
-            layer.clearBuffer();
+        for (int i = 0; i < layers.length; i++) {
+            if(usedLayers.contains(i))
+                layers[i].clearBuffer();
         }
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
         usedLayers.clear();
     }
 
