@@ -54,6 +54,10 @@ public class VAO implements Disposable {
         GL30.glBindVertexArray(id);
     }
 
+    public VBO[] getVbos() {
+        return vbos;
+    }
+
     public void enableVertexAttribArrays() {
         for (VBO vbo : vbos) {
             GL20.glEnableVertexAttribArray(vbo.getType().getIndex());

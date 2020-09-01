@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL20;
 
 public class VBO implements Disposable {
 
-    private int id;
+    protected int id;
     private final float[] data;
     private final int size;
 
