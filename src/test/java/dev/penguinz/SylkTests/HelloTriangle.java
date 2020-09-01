@@ -11,6 +11,7 @@ import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.graphics.post.effects.BloomEffect;
 import dev.penguinz.Sylk.graphics.post.effects.VignetteEffect;
 import dev.penguinz.Sylk.input.Key;
+import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;
 import dev.penguinz.Sylk.util.maths.Transform;
 import dev.penguinz.Sylk.util.maths.Vector2;
@@ -27,7 +28,7 @@ public class HelloTriangle implements Layer {
         this.renderer = new MainRenderer();
         this.renderer2 = new MainRenderer(RenderLayer.RENDER1);
 
-        Application.getInstance().addPostEffect(RenderLayer.RENDER1, new BloomEffect(camera, 30f, 12, 2f));
+        Application.getInstance().addPostEffect(RenderLayer.RENDER0, new BloomEffect(camera, 30f, 12, 1f));
         //Application.getInstance().addPostEffect(RenderLayer.RENDER1, new VignetteEffect(0.6f, 0.4f));
     }
 
@@ -45,7 +46,7 @@ public class HelloTriangle implements Layer {
         this.renderer.finish();
 
         this.renderer2.begin(camera);
-        this.renderer2.render(VAO.triangle, new Transform(new Vector2(-1, -0.5f)), new Material());
+        this.renderer2.render(VAO.triangle, new Transform(new Vector2(-0.25f, 0.25f)), new Material(new Color(1, 0.5f, 1, 0.8f)));
         this.renderer2.finish();
     }
 

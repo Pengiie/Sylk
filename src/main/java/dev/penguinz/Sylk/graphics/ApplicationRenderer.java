@@ -74,11 +74,10 @@ public class ApplicationRenderer implements Disposable {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         glEnable(GL11.GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         for (int texture : usedTextures) {
             GL11.glBindTexture(GL_TEXTURE_2D, texture);
-            System.out.println("binding "+texture);
             glDrawArrays(GL_TRIANGLES, 0, screenQuad.getVertexCount());
         }
         glDisable(GL11.GL_BLEND);

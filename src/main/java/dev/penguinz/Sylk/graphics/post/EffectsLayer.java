@@ -60,7 +60,6 @@ public class EffectsLayer implements Disposable {
     }
 
     public int process() {
-        System.out.println(fbo);
         int workingTexture = texture;
         for (PostEffect effect : effects) {
             effect.clearBuffers();
@@ -71,8 +70,8 @@ public class EffectsLayer implements Disposable {
 
     public void clearBuffer() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, fbo);
-        System.out.println(fbo);
-        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
+        GL30.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
+        GL30.glClearBufferfv(GL_COLOR, 0, new float[] {0,0,0,0});
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 

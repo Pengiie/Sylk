@@ -73,14 +73,14 @@ public class VignetteEffect implements PostEffect {
         vignetteShader.loadUniform(VignetteShader.softness, softness.value);
         vignetteShader.loadUniform(VignetteShader.opacity, 1f);
         GL11.glDrawArrays(GL_TRIANGLES, 0, ApplicationRenderer.screenQuad.getVertexCount());
-        System.out.println(GL30.glGetInteger(GL30.GL_READ_FRAMEBUFFER_BINDING) +" drawing "+finalBuffer);
         return finalTexture;
     }
 
     @Override
     public void clearBuffers() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, finalBuffer);
-        GL30.glClearBufferfv(GL_COLOR, GL30.GL_COLOR_ATTACHMENT0, new float[] {0,0,0,0});
+        GL30.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
+        GL30.glClearBufferfv(GL_COLOR, 0, new float[] {0,0,0,0});
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
