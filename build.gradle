@@ -27,6 +27,8 @@ repositories {
 }
 
 dependencies {
+    implementation "org.jbox2d:jbox2d-library:2.2.1.1"
+
     implementation "io.imgui.java:binding:$imguiVersion"
     implementation "io.imgui.java:lwjgl3:$imguiVersion"
     runtimeOnly "io.imgui.java:$natives:$imguiVersion"

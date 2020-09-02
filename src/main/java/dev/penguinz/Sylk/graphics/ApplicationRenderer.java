@@ -10,6 +10,7 @@ import dev.penguinz.Sylk.graphics.shader.uniforms.ShaderUniform;
 import dev.penguinz.Sylk.graphics.shader.uniforms.ShaderUniformInt;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
 import dev.penguinz.Sylk.util.Disposable;
+import dev.penguinz.Sylk.util.Layer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
@@ -79,6 +80,13 @@ public class ApplicationRenderer implements Disposable {
         for (int texture : usedTextures) {
             GL11.glBindTexture(GL_TEXTURE_2D, texture);
             glDrawArrays(GL_TRIANGLES, 0, screenQuad.getVertexCount());
+        }
+        glBlendFunc(GL_ONE, GL_ONE);
+        for (int i = 0; i < layers.length; i++) {
+            if(usedLayers.contains(i)) {
+                GL11.glBindTexture(GL_TEXTURE_2D, layers[i].getBlurTexture());
+                glDrawArrays(GL_TRIANGLES, 0, screenQuad.getVertexCount());
+            }
         }
         glDisable(GL11.GL_BLEND);
         screenQuad.disableVertexAttribArrays();

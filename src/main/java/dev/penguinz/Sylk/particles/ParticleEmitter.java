@@ -19,6 +19,8 @@ public class ParticleEmitter {
     private final Animator animator = new Animator();
 
     public Vector2 position;
+    public float initialRotation = 0;
+    public Vector2 initialSize = new Vector2();
 
     public ParticleEmitter(Vector2 position) {
         this.position = position;
@@ -29,18 +31,18 @@ public class ParticleEmitter {
     }
 
     public void emit(int count, Particle particle, Vector2 velocity, float lifetime) {
-        AnimatableVector2 size = new AnimatableVector2(new Vector2(particle.startSize));
+        AnimatableVector2 size = new AnimatableVector2(new Vector2(Vector2.add(particle.startSize, initialSize)));
         AnimatableColor color = new AnimatableColor(new Color(particle.startColor));
-        AnimatableFloat rotation = new AnimatableFloat(particle.startRotation);
+        AnimatableFloat rotation = new AnimatableFloat(particle.startRotation + initialRotation);
         if(particle.isSizeAnimated || particle.isColorAnimated || particle.isRotationAnimated) {
             Animation animation = new Animation(lifetime);
-            if(particle.isSizeAnimated) animation.addValue(size, particle.startSize, particle.endSize);
+            if(particle.isSizeAnimated) animation.addValue(size, Vector2.add(particle.startSize, initialSize), Vector2.add(particle.endSize, initialSize));
             if(particle.isColorAnimated) animation.addValue(color, particle.startColor, particle.endColor);
-            if(particle.isRotationAnimated) animation.addValue(rotation, particle.startRotation, particle.endRotation);
+            if(particle.isRotationAnimated) animation.addValue(rotation, particle.startRotation + initialRotation, particle.endRotation + initialRotation);
             animator.playAnimation(animation);
         }
         for (int i = 0; i < count; i++) {
-            particleInstances.add(new ParticleInstance(this.position, size, rotation, velocity, color, particle.friction, lifetime));
+            particleInstances.add(new ParticleInstance(Vector2.sub(this.position, new Vector2(size.value.x/2, size.value.y/2)), size, rotation, velocity, color, particle.friction, lifetime));
         }
     }
 

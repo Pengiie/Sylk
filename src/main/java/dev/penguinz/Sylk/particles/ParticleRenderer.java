@@ -6,6 +6,11 @@ import dev.penguinz.Sylk.graphics.RenderLayer;
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
 import dev.penguinz.Sylk.util.Disposable;
+import dev.penguinz.Sylk.util.MatrixUtils;
+import dev.penguinz.Sylk.util.maths.Transform;
+import dev.penguinz.Sylk.util.maths.Vector2;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
@@ -35,8 +40,8 @@ public class ParticleRenderer implements Disposable {
     
     public ParticleRenderer(RenderLayer renderLayer) {
         this.renderLayer = renderLayer;
-        // 2 vertices, 2 texture coords
-        this.data = MemoryUtil.memAllocFloat(MAX_PARTICLES * 2 * 2);
+        // 2 vertices, 2 texture coords, 4 color components, 1 rotation
+        this.data = MemoryUtil.memAllocFloat(MAX_PARTICLES * 2 * 2 * 4);
 
         this.particleVao = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(this.particleVao);
@@ -73,22 +78,29 @@ public class ParticleRenderer implements Disposable {
             for (ParticleInstance particleInstance : emitter.getParticles()) {
                 if(data.remaining() < 6 * 9)
                     break;
-                float posX0 = particleInstance.getPosition().x;
-                float posX1 = particleInstance.getPosition().x + particleInstance.getSize().x;
-                float posY0 = particleInstance.getPosition().y;
-                float posY1 = particleInstance.getPosition().y + particleInstance.getSize().y;
+                Matrix4f transformMatrix =
+                        MatrixUtils.createTransformMatrix(
+                                new Transform(
+                                        particleInstance.getPosition(),
+                                        particleInstance.getRotation(),
+                                        new Vector2(particleInstance.getSize().x / 2, particleInstance.getSize().y / 2),
+                                        particleInstance.getSize()));
+                Vector4f pos0 = new Vector4f(0, 0, 0, 1).mul(transformMatrix);
+                Vector4f pos1 = new Vector4f(0, 1, 0, 1).mul(transformMatrix);
+                Vector4f pos2 = new Vector4f(1, 0, 0, 1).mul(transformMatrix);
+                Vector4f pos3 = new Vector4f(1, 1, 0, 1).mul(transformMatrix);
                 float rot = particleInstance.getRotation();
                 float   r = particleInstance.getColor().r,
                         g = particleInstance.getColor().g,
                         b = particleInstance.getColor().b,
                         a = particleInstance.getColor().a;
                 data.put(new float[] {
-                        posX0, posY1, 0, 1, r, g, b, a, rot,
-                        posX1, posY0, 1, 0, r, g, b, a, rot,
-                        posX0, posY0, 0, 0, r, g, b, a, rot,
-                        posX0, posY1, 0, 1, r, g, b, a, rot,
-                        posX1, posY0, 1, 0, r, g, b, a, rot,
-                        posX1, posY1, 1, 1, r, g, b, a, rot,
+                        pos1.x, pos1.y, 0, 1, r, g, b, a, rot,
+                        pos2.x, pos2.y, 1, 0, r, g, b, a, rot,
+                        pos0.x, pos0.y, 0, 0, r, g, b, a, rot,
+                        pos1.x, pos1.y, 0, 1, r, g, b, a, rot,
+                        pos2.x, pos2.y, 1, 0, r, g, b, a, rot,
+                        pos3.x, pos3.y, 1, 1, r, g, b, a, rot,
                 });
                 count += 6;
             }

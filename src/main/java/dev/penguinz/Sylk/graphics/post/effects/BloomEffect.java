@@ -24,7 +24,8 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 public class BloomEffect implements PostEffect {
 
     private final AnimatableFloat size;
-    private final AnimatableInt strength;
+    private final AnimatableInt smoothness;
+    private final AnimatableFloat strength;
     private final AnimatableFloat opacity;
 
     private final OrthographicCamera camera;
@@ -40,13 +41,14 @@ public class BloomEffect implements PostEffect {
     private final Shader blendShader;
     private int finalBuffer, finalTexture;
 
-    public BloomEffect(OrthographicCamera camera, float size, int strength, float opacity) {
+    public BloomEffect(OrthographicCamera camera, float size, int smoothness, float strength, float opacity) {
         this.camera = camera;
         this.startWidth = Application.getInstance().getWindowWidth();
         this.startHeight = Application.getInstance().getWindowHeight();
 
         this.size = new AnimatableFloat(size);
-        this.strength = new AnimatableInt(strength);
+        this.smoothness = new AnimatableInt(smoothness);
+        this.strength = new AnimatableFloat(strength);
         this.opacity = new AnimatableFloat(opacity);
 
         this.splitShader = SplitShader.create();
@@ -120,9 +122,10 @@ public class BloomEffect implements PostEffect {
 
         boolean horizontal = true;
         boolean firstIteration = true;
-        int blurAmount = strength.value * 2;
+        int blurAmount = smoothness.value * 2;
 
         blurShader.use();
+        blurShader.loadUniform(BlurShader.strength, strength.value);
 
         for (int i = 0; i < blurAmount; i++) {
             GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, blurFrameBuffers[horizontal ? 1 : 0]);
@@ -193,7 +196,7 @@ public class BloomEffect implements PostEffect {
     }
 
     public AnimatableInt getStrength() {
-        return strength;
+        return smoothness;
     }
 
     public AnimatableFloat getOpacity() {
@@ -250,6 +253,7 @@ public class BloomEffect implements PostEffect {
 
         public static final String horizontal = "u_horizontal";
         public static final String size = "u_scale";
+        public static final String strength = "u_strength";
 
         private static final List<ShaderUniform<?>> uniforms = new ArrayList<>();
 
@@ -257,6 +261,7 @@ public class BloomEffect implements PostEffect {
             uniforms.add(new ShaderUniformInt(UniformConstants.texture0));
             uniforms.add(new ShaderUniformBool(horizontal));
             uniforms.add(new ShaderUniformFloat(size));
+            uniforms.add(new ShaderUniformFloat(strength));
         }
 
         public static Shader create() {
@@ -277,6 +282,7 @@ public class BloomEffect implements PostEffect {
                             "uniform sampler2D "+UniformConstants.texture0 +";\n"+
                             "uniform bool "+ BlurShader.horizontal +";\n"+
                             "uniform float "+BlurShader.size +";\n"+
+                            "uniform float "+BlurShader.strength+";\n"+
                             "uniform float weights[6] = float [] (0.198596, 0.175713, 0.121703, 0.065984, 0.028002, 0.0093);\n"+
                             "uniform float offsets[6] = float [] (0, 0.1, 0.3, 0.8, 1.5, 3.0);\n"+
                             "void main()\n"+
@@ -285,13 +291,13 @@ public class BloomEffect implements PostEffect {
                             "  vec4 result = texture("+UniformConstants.texture0+", pass_texCoord) * weights[0];\n"+
                             "  if("+ BlurShader.horizontal+") {\n"+
                             "    for(int i = 1; i < 6; ++i) {\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(offsets[i] * texSize.x * "+BlurShader.size+", 0.0)) * weights[i];\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(offsets[i] * texSize.x * "+BlurShader.size+", 0.0)) * weights[i];\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(offsets[i] * texSize.x * "+BlurShader.size+", 0.0)) * weights[i] * "+BlurShader.strength+";\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(offsets[i] * texSize.x * "+BlurShader.size+", 0.0)) * weights[i] * "+BlurShader.strength+";\n"+
                             "    }\n"+
                             "  } else {\n"+
                             "    for(int i = 1; i < 6; ++i) {\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")) * weights[i];\n"+
-                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")) * weights[i];\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord + vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")) * weights[i] * "+BlurShader.strength+";\n"+
+                            "      result += texture("+UniformConstants.texture0+", pass_texCoord - vec2(0.0, offsets[i] * texSize.y * "+BlurShader.size+")) * weights[i] * "+BlurShader.strength+";\n"+
                             "    }\n"+
                             "  }\n"+
                             "  fragColor = vec4(result.rgb, 1);\n" +
@@ -329,7 +335,8 @@ public class BloomEffect implements PostEffect {
                             "void main()\n"+
                             "{\n" +
                             "  vec4 blurColor = texture("+UniformConstants.texture1+", pass_texCoord);\n"+
-                            "  fragColor = texture("+UniformConstants.texture0+", pass_texCoord) + blurColor;\n"+ //vec4(blurColor.rgb, pow((blurColor.r + blurColor.g * 2 + blurColor.b)/2,1)*1.1);\n"+
+                            "  vec4 texColor = texture("+UniformConstants.texture0+", pass_texCoord);\n"+
+                            "  fragColor = texColor + blurColor;\n"+ //vec4(blurColor.rgb, pow((blurColor.r + blurColor.g * 2 + blurColor.b)/2,1)*1.1);\n"+
                             "}\n", uniforms);
             shader.use();
             shader.loadUniform(UniformConstants.texture0, 0);
