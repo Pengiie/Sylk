@@ -20,6 +20,7 @@ public class ParticleShader {
                         "layout (location = 0) in vec2 in_position;\n" +
                         "layout (location = 1) in vec2 in_texCoord;\n" +
                         "layout (location = 2) in vec4 in_color;\n" +
+                        "layout (location = 2) in float in_rotation;\n" +
                         "out vec2 pass_texCoord;\n"+
                         "out vec4 pass_color;\n"+
                         "uniform mat4 "+UniformConstants.projViewMatrix+";\n"+
@@ -27,7 +28,7 @@ public class ParticleShader {
                         "{\n" +
                         "  pass_texCoord = in_texCoord;\n"+
                         "  pass_color = in_color;\n"+
-                        "  gl_Position = "+ UniformConstants.projViewMatrix+" * vec4(in_position.xy, 0, 1);\n" +
+                        "  gl_Position = "+ UniformConstants.projViewMatrix+" * vec4(in_position, 0, 1);\n" +
                         "}\n"
                 ,
                 "#version 400 core\n" +

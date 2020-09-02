@@ -24,17 +24,23 @@ public class ParticleEmitter {
         this.position = position;
     }
 
+    public void emit(Particle particle, Vector2 velocity, float lifetime) {
+        emit(1, particle, velocity, lifetime);
+    }
+
     public void emit(int count, Particle particle, Vector2 velocity, float lifetime) {
         AnimatableVector2 size = new AnimatableVector2(new Vector2(particle.startSize));
         AnimatableColor color = new AnimatableColor(new Color(particle.startColor));
-        if(particle.isSizeAnimated || particle.isColorAnimated) {
+        AnimatableFloat rotation = new AnimatableFloat(particle.startRotation);
+        if(particle.isSizeAnimated || particle.isColorAnimated || particle.isRotationAnimated) {
             Animation animation = new Animation(lifetime);
             if(particle.isSizeAnimated) animation.addValue(size, particle.startSize, particle.endSize);
             if(particle.isColorAnimated) animation.addValue(color, particle.startColor, particle.endColor);
+            if(particle.isRotationAnimated) animation.addValue(rotation, particle.startRotation, particle.endRotation);
             animator.playAnimation(animation);
         }
         for (int i = 0; i < count; i++) {
-            particleInstances.add(new ParticleInstance(this.position, size, new AnimatableFloat(0), velocity, color, particle.friction, lifetime));
+            particleInstances.add(new ParticleInstance(this.position, size, rotation, velocity, color, particle.friction, lifetime));
         }
     }
 

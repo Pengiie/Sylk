@@ -29,6 +29,8 @@ public class Application {
     private ApplicationRenderer renderer;
     private AssetManager assetManager;
     private final List<Layer> layers = new ArrayList<>();
+    private final List<Layer> toAttachLayers = new ArrayList<>();
+    private final List<Layer> toRemoveLayers = new ArrayList<>();
 
     private final ApplicationPropertySet properties;
 
@@ -41,14 +43,14 @@ public class Application {
 
     public void attachLayers(Layer... layers) {
         for (Layer layer : layers) {
-            this.layers.add(layer);
+            this.toAttachLayers.add(layer);
             layer.init();
         }
     }
 
     public void removeLayers(Layer... layers) {
         for (Layer layer : layers) {
-            this.layers.remove(layer);
+            this.toRemoveLayers.add(layer);
             layer.dispose();
         }
     }
@@ -101,12 +103,19 @@ public class Application {
 
             this.assetManager.update();
 
+            layers.addAll(toAttachLayers);
+            toAttachLayers.clear();
+
             for (Layer layer : layers) {
                 layer.update();
             }
             for (Layer layer : layers) {
                 layer.render();
             }
+
+            layers.removeAll(toRemoveLayers);
+            toRemoveLayers.clear();
+
 
             this.renderer.render();
 

@@ -7,6 +7,7 @@ public class ParticleBuilder {
 
     private Vector2 startSize = new Vector2(1), endSize = startSize;
     private Color startColor = Color.white, endColor = startColor;
+    private float startRotation = 0, endRotation = 1;
     private float friction = 1;
 
     public ParticleBuilder setColor(Color color) {
@@ -46,7 +47,23 @@ public class ParticleBuilder {
         return this;
     }
 
+    public ParticleBuilder setRotation(float rotation) {
+        this.startRotation = rotation;
+        this.endRotation = rotation;
+        return this;
+    }
+
+    public ParticleBuilder setStartRotation(float startRotation) {
+        this.startRotation = startRotation;
+        return this;
+    }
+
+    public ParticleBuilder setEndRotation(float endRotation) {
+        this.endRotation = endRotation;
+        return this;
+    }
+
     public Particle build() {
-        return new Particle(startSize, endSize, startColor, endColor, friction);
+        return new Particle(startSize, endSize, startColor, endColor, startRotation, endRotation, friction);
     }
 }

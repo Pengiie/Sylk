@@ -19,7 +19,7 @@ public class ParticleRenderer implements Disposable {
 
     private static final int MAX_PARTICLES = 1000;
 
-    private static final int STRIDE = Float.BYTES * 8;
+    private static final int STRIDE = Float.BYTES * 9;
 
     private int particleVao;
     private int particleVbo;
@@ -50,6 +50,8 @@ public class ParticleRenderer implements Disposable {
         GL30.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, STRIDE, Float.BYTES * 2);
         GL30.glEnableVertexAttribArray(2);
         GL30.glVertexAttribPointer(2, 4, GL11.GL_FLOAT, false, STRIDE, Float.BYTES * 4);
+        GL30.glEnableVertexAttribArray(3);
+        GL30.glVertexAttribPointer(3, 1, GL11.GL_FLOAT, false, STRIDE, Float.BYTES);
 
         this.shader = ParticleShader.create();
     }
@@ -66,23 +68,27 @@ public class ParticleRenderer implements Disposable {
         int count = 0;
         data.clear();
         for (ParticleEmitter emitter : this.emitters) {
-            if(data.remaining() < 6 * 4)
+            if(data.remaining() < 6 * 9)
                 break;
             for (ParticleInstance particleInstance : emitter.getParticles()) {
-                if(data.remaining() < 6 * 4)
+                if(data.remaining() < 6 * 9)
                     break;
                 float posX0 = particleInstance.getPosition().x;
-                float posX1 = posX0 + particleInstance.getSize().x;
+                float posX1 = particleInstance.getPosition().x + particleInstance.getSize().x;
                 float posY0 = particleInstance.getPosition().y;
-                float posY1 = posY0 + particleInstance.getSize().y;
-                float r = particleInstance.getColor().r, g = particleInstance.getColor().g, b = particleInstance.getColor().b,  a = particleInstance.getColor().a;
+                float posY1 = particleInstance.getPosition().y + particleInstance.getSize().y;
+                float rot = particleInstance.getRotation();
+                float   r = particleInstance.getColor().r,
+                        g = particleInstance.getColor().g,
+                        b = particleInstance.getColor().b,
+                        a = particleInstance.getColor().a;
                 data.put(new float[] {
-                        posX0, posY1, 0, 1, r, g, b, a,
-                        posX1, posY0, 1, 0, r, g, b, a,
-                        posX0, posY0, 0, 0, r, g, b, a,
-                        posX0, posY1, 0, 1, r, g, b, a,
-                        posX1, posY0, 1, 0, r, g, b, a,
-                        posX1, posY1, 1, 1, r, g, b, a,
+                        posX0, posY1, 0, 1, r, g, b, a, rot,
+                        posX1, posY0, 1, 0, r, g, b, a, rot,
+                        posX0, posY0, 0, 0, r, g, b, a, rot,
+                        posX0, posY1, 0, 1, r, g, b, a, rot,
+                        posX1, posY0, 1, 0, r, g, b, a, rot,
+                        posX1, posY1, 1, 1, r, g, b, a, rot,
                 });
                 count += 6;
             }
