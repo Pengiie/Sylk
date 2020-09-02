@@ -1,5 +1,10 @@
 package dev.penguinz.Sylk.particles;
 
+import dev.penguinz.Sylk.animation.Animation;
+import dev.penguinz.Sylk.animation.Animator;
+import dev.penguinz.Sylk.animation.values.AnimatableColor;
+import dev.penguinz.Sylk.animation.values.AnimatableFloat;
+import dev.penguinz.Sylk.animation.values.AnimatableVector2;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.maths.Transform;
 import dev.penguinz.Sylk.util.maths.Vector2;
@@ -9,33 +14,45 @@ import java.util.List;
 
 public class ParticleEmitter {
 
-    private final List<Particle> particles = new ArrayList<>();
+    private final List<ParticleInstance> particleInstances = new ArrayList<>();
 
-    private Vector2 position;
+    private final Animator animator = new Animator();
+
+    public Vector2 position;
 
     public ParticleEmitter(Vector2 position) {
         this.position = position;
     }
 
-    public void emit(int count, Vector2 size, Vector2 velocity, Color color, float lifetime) {
+    public void emit(int count, Particle particle, Vector2 velocity, float lifetime) {
+        AnimatableVector2 size = new AnimatableVector2(new Vector2(particle.startSize));
+        AnimatableColor color = new AnimatableColor(new Color(particle.startColor));
+        if(particle.isSizeAnimated || particle.isColorAnimated) {
+            Animation animation = new Animation(lifetime);
+            if(particle.isSizeAnimated) animation.addValue(size, particle.startSize, particle.endSize);
+            if(particle.isColorAnimated) animation.addValue(color, particle.startColor, particle.endColor);
+            animator.playAnimation(animation);
+        }
         for (int i = 0; i < count; i++) {
-            particles.add(new Particle(new Transform(position, new Vector2(size)), velocity, color, 1, 1));
+            particleInstances.add(new ParticleInstance(this.position, size, new AnimatableFloat(0), velocity, color, particle.friction, lifetime));
         }
     }
 
     public void update() {
-        Particle[] particlesToRemove = new Particle[particles.size()];
-        for (int i = 0; i < particles.size(); i++) {
-            if(particles.get(i).update())
-                particlesToRemove[i] = particles.get(i);
+        ParticleInstance[] particlesToRemove = new ParticleInstance[particleInstances.size()];
+        for (int i = 0; i < particleInstances.size(); i++) {
+            if(particleInstances.get(i).update())
+                particlesToRemove[i] = particleInstances.get(i);
         }
-        for (Particle particle : particlesToRemove) {
-            if (particle != null)
-                particles.remove(particle);
+        for (ParticleInstance particleInstance : particlesToRemove) {
+            if (particleInstance != null)
+                particleInstances.remove(particleInstance);
         }
+
+        animator.update();
     }
 
-    public List<Particle> getParticles() {
-        return particles;
+    public List<ParticleInstance> getParticles() {
+        return particleInstances;
     }
 }

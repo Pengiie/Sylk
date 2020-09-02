@@ -4,7 +4,9 @@ import dev.penguinz.Sylk.Time;
 import dev.penguinz.Sylk.animation.interpolators.ColorInterpolator;
 import dev.penguinz.Sylk.animation.interpolators.FloatInterpolator;
 import dev.penguinz.Sylk.animation.interpolators.Interpolator;
+import dev.penguinz.Sylk.animation.interpolators.Vector2Interpolator;
 import dev.penguinz.Sylk.util.Color;
+import dev.penguinz.Sylk.util.maths.Vector2;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +20,7 @@ public class Animator {
     static {
         interpolators.put(Float.class, new FloatInterpolator());
         interpolators.put(Color.class, new ColorInterpolator());
+        interpolators.put(Vector2.class, new Vector2Interpolator());
     }
 
     private final HashMap<Animation, Float> runningAnimations = new HashMap<>();

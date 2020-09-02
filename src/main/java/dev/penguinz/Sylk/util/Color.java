@@ -47,6 +47,10 @@ public class Color {
         this.a = a > 1 ? a / 255 : a;
     }
 
+    public boolean equals(Color other) {
+        return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a;
+    }
+
     public Vector4f toVector() {
         return new Vector4f(r, g, b, a);
     }
