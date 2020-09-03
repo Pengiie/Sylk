@@ -49,10 +49,10 @@ public class MainRenderer extends Renderer {
             shader.loadUniform(UniformConstants.transformationMatrix, MatrixUtils.createTransformMatrix(renderItem.transform));
 
             shader.loadUniform(UniformConstants.color, renderItem.material.color.toVector());
-            boolean hasTexture = renderItem.material.texture != null;
+            boolean hasTexture = renderItem.material.getTexture() != null;
             shader.loadUniform(UniformConstants.hasTexture, hasTexture);
             if(hasTexture)
-                shader.loadUniform(UniformConstants.texture0, renderItem.material.texture);
+                shader.loadUniform(UniformConstants.texture0, renderItem.material.getTexture());
 
             glDrawArrays(GL11.GL_TRIANGLES, 0, currentVao.getVertexCount());
         }

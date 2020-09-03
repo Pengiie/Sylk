@@ -3,8 +3,10 @@ package dev.penguinz.Sylk.physics;
 import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.util.RefContainer;
 import dev.penguinz.Sylk.util.maths.Transform;
+import dev.penguinz.Sylk.util.maths.Vector2;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.collision.shapes.ShapeType;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.*;
 
@@ -25,6 +27,15 @@ public class RigidBody {
 
         this.body = Application.getInstance().getPhysics().registerRigidBody(this);
         setCollider(collider);
+        this.body.setFixedRotation(true);
+    }
+
+    public void applyForce(Vector2 force) {
+        this.body.applyForceToCenter(new Vec2(force.x, force.y));
+    }
+
+    public void applyImpulseForce(Vector2 force) {
+        this.body.applyLinearImpulse(new Vec2(force.x, force.y), body.getWorldCenter());
     }
 
     public RigidBody setCollider(Collider collider) {
@@ -44,11 +55,6 @@ public class RigidBody {
 
     public RigidBody setRestitution(float restitution) {
         this.body.getFixtureList().setRestitution(restitution);
-        return this;
-    }
-
-    public RigidBody setFixedRotation(boolean fixedRotation) {
-        this.body.setFixedRotation(fixedRotation);
         return this;
     }
 

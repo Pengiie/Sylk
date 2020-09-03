@@ -1,7 +1,9 @@
 package dev.penguinz.SylkTests;
 
+import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.ApplicationBuilder;
 import dev.penguinz.Sylk.OrthographicCamera;
+import dev.penguinz.Sylk.Time;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.graphics.MainRenderer;
 import dev.penguinz.Sylk.graphics.Material;
@@ -29,30 +31,33 @@ public class PhysicsSandbox implements Layer {
 
     @Override
     public void init() {
+        Application.getInstance().getPhysics().setGravity(new Vector2(0, 0));
+
         this.transform = new RefContainer<>(new Transform(new Vector2(), new Vector2(0.5f)));
         this.rigidBody = new RigidBody(transform, RigidBody.Type.DYNAMIC, new BoxCollider(transform.value)).
-                setRestitution(0.7f).
+                setRestitution(0.4f).
                 setDensity(0.1f).
-                setFriction(0.2f).
-                setFixedRotation(true);
+                setFriction(0.5f);
 
         platformTransform = new RefContainer<>(new Transform(new Vector2(-1, -0.8f), new Vector2(2, 0.25f)));
         this.platform = new RigidBody(platformTransform, RigidBody.Type.STATIC, new BoxCollider(platformTransform));
 
-        this.camera = new OrthographicCamera();
+        this.camera = new OrthographicCamera(5);
         this.renderer = new MainRenderer();
     }
 
     @Override
     public void update() {
-
+        this.rigidBody.applyImpulseForce(new Vector2(
+                Application.getInstance().getInput().getHorizontalInput() * Time.deltaTime(),
+                Application.getInstance().getInput().getVerticalInput() * Time.deltaTime()));
     }
 
     @Override
     public void render() {
         this.renderer.begin(camera);
         this.renderer.render(VAO.quad, transform.value, new Material());
-        this.renderer.render(VAO.quad, platformTransform.value, new Material(new Color(0.8f, 0.2f, 0.2f, 0.5f)));
+        this.renderer.render(VAO.quad, platformTransform.value, new Material(new Color(0.8f, 0.4f, 0.4f, 0.6f)));
         this.renderer.finish();
     }
 
