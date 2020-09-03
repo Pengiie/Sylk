@@ -7,12 +7,17 @@ import java.util.List;
 
 public class MainShader {
 
+    public static final String textureOffset = "u_texOffset";
+    public static final String textureSize = "u_texSize";
+
     private static final List<ShaderUniform<?>> uniforms = new ArrayList<>();
 
     static {
         uniforms.add(new ShaderUniformVec4(UniformConstants.color));
         uniforms.add(new ShaderUniformBool(UniformConstants.hasTexture));
         uniforms.add(new ShaderUniformSampler2D(UniformConstants.texture0));
+        uniforms.add(new ShaderUniformVec2(textureOffset));
+        uniforms.add(new ShaderUniformVec2(textureSize));
 
         uniforms.add(new ShaderUniformMat4(UniformConstants.projViewMatrix));
         uniforms.add(new ShaderUniformMat4(UniformConstants.transformationMatrix));
@@ -26,9 +31,11 @@ public class MainShader {
                 "out vec2 pass_texCoord;\n"+
                 "uniform mat4 "+UniformConstants.projViewMatrix+";\n"+
                 "uniform mat4 "+UniformConstants.transformationMatrix+";\n"+
+                "uniform vec2 "+textureOffset+";\n"+
+                "uniform vec2 "+textureSize+";\n"+
                 "void main()\n"+
                 "{\n" +
-                "  pass_texCoord = in_texCoord;\n"+
+                "  pass_texCoord = "+textureOffset+" + in_texCoord * "+textureSize+";\n"+
                 "  gl_Position = "+UniformConstants.projViewMatrix+" * "+UniformConstants.transformationMatrix+" * vec4(in_position.x, in_position.y, 0, 1);\n" +
                 "}\n"
                 ,

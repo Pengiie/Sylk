@@ -14,12 +14,12 @@ public class BoxCollider extends Collider {
     }
 
     public BoxCollider(Transform transform) {
-        this(transform.getScale(), new Vector2(transform.getScale().x, transform.getScale().y));
+        this(transform.getScale(), transform.getScale(), transform.rotation);
     }
 
-    public BoxCollider(Vector2 size, Vector2 offset) {
+    public BoxCollider(Vector2 size, Vector2 offset, float rotation) {
         super(new PolygonShape());
         PolygonShape polygonShape = (PolygonShape) shape;
-        polygonShape.setAsBox(size.x/2, size.y/2, new Vec2(0, size.y/2), 0);
+        polygonShape.setAsBox(size.x/2, size.y/2, new Vec2(offset.x/2, offset.y/2), rotation);
     }
 }
