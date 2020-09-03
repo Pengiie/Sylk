@@ -1,7 +1,6 @@
 package dev.penguinz.Sylk.graphics.post.effects;
 
 import dev.penguinz.Sylk.Application;
-import dev.penguinz.Sylk.Camera;
 import dev.penguinz.Sylk.OrthographicCamera;
 import dev.penguinz.Sylk.animation.values.AnimatableFloat;
 import dev.penguinz.Sylk.animation.values.AnimatableInt;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
 public class BloomEffect implements PostEffect {
 

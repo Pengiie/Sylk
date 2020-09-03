@@ -2,8 +2,8 @@ package dev.penguinz.Sylk.ui;
 
 import dev.penguinz.Sylk.ui.font.Font;
 import dev.penguinz.Sylk.ui.font.RelativeTextHeight;
-import dev.penguinz.Sylk.util.Alignment;
 import dev.penguinz.Sylk.ui.font.TextHeight;
+import dev.penguinz.Sylk.util.Alignment;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.RefContainer;
 

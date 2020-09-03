@@ -1,6 +1,5 @@
 package dev.penguinz.Sylk.graphics;
 
-import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.event.window.WindowResizeEvent;
 import dev.penguinz.Sylk.graphics.post.EffectsLayer;
@@ -10,13 +9,9 @@ import dev.penguinz.Sylk.graphics.shader.uniforms.ShaderUniform;
 import dev.penguinz.Sylk.graphics.shader.uniforms.ShaderUniformInt;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
 import dev.penguinz.Sylk.util.Disposable;
-import dev.penguinz.Sylk.util.Layer;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 

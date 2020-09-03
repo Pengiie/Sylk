@@ -1,7 +1,5 @@
 package dev.penguinz.Sylk.ui.constraints;
 
-import dev.penguinz.Sylk.ui.UIContainer;
-
 public class UIConstraints {
 
     private Constraint xConstraint;

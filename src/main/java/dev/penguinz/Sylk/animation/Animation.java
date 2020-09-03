@@ -3,7 +3,6 @@ package dev.penguinz.Sylk.animation;
 import dev.penguinz.Sylk.animation.values.AnimatableValue;
 import dev.penguinz.Sylk.ui.constraints.AnimatableConstraint;
 
-import javax.security.auth.callback.Callback;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

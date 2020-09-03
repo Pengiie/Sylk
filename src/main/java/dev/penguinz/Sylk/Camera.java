@@ -8,6 +8,7 @@ import dev.penguinz.Sylk.util.maths.Transform;
 import dev.penguinz.Sylk.util.maths.Vector2;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 public abstract class Camera {
 
@@ -34,6 +35,7 @@ public abstract class Camera {
         projectionMatrix.mul(MatrixUtils.createViewMatrix(transform), projViewMatrix);
 
         if(backgroundColor != null) {
+            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
             GL11.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
         }
     }

@@ -4,7 +4,6 @@ import dev.penguinz.Sylk.Time;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TaskScheduler {
 
@@ -18,16 +17,23 @@ public class TaskScheduler {
 
     public Task scheduleRepeatingTask(Runnable runnable, float repeatDelay) {
         Task task = new Task(runnable, repeatDelay * 0.001f, true);
+        task.runnable.run();
         tasks.add(task);
         return task;
     }
 
     public void update() {
-        tasks = tasks.stream().filter(Task::isRunning).collect(Collectors.toList());
+        for (int i = 0; i < tasks.size(); i++) {
+            if(!tasks.get(i).isRunning()) {
+                tasks.remove(i);
+                i--;
+            }
+        }
 
         for (Task task : tasks) {
             if(task.lastTime + task.time <= Time.getTime()) {
                 task.runnable.run();
+                task.lastTime = Time.getTime();
                 if(!task.repeated)
                     task.cancel();
             }

@@ -5,7 +5,8 @@ import dev.penguinz.Sylk.Time;
 public class Task {
 
     final Runnable runnable;
-    final float time, lastTime = Time.getTime();
+    final float time;
+    float lastTime = Time.getTime();
     final boolean repeated;
 
     private boolean running = true;

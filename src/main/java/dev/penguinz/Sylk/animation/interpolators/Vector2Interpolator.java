@@ -1,6 +1,5 @@
 package dev.penguinz.Sylk.animation.interpolators;
 
-import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.InterpolationUtils;
 import dev.penguinz.Sylk.util.maths.Vector2;
 

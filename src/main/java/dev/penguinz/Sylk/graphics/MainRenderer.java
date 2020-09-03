@@ -2,20 +2,12 @@ package dev.penguinz.Sylk.graphics;
 
 import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.Camera;
-import dev.penguinz.Sylk.event.Event;
-import dev.penguinz.Sylk.event.window.WindowResizeEvent;
 import dev.penguinz.Sylk.graphics.shader.MainShader;
-import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
 import dev.penguinz.Sylk.util.MatrixUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
 
-import java.nio.ByteBuffer;
-
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
 
 /**
  * The main renderer that handles rendering and post processing effects.

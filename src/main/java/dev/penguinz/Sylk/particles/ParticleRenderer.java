@@ -17,14 +17,14 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ParticleRenderer implements Disposable {
 
     private static final int MAX_PARTICLES = 1000;
 
-    private static final int STRIDE = Float.BYTES * 9;
+    private static final int ATTRIBUTES = 8;
+    private static final int STRIDE = Float.BYTES * ATTRIBUTES;
+    private static final int VERTICES = 6;
 
     private int particleVao;
     private int particleVbo;
@@ -33,15 +33,16 @@ public class ParticleRenderer implements Disposable {
 
     private FloatBuffer data;
 
-    private List<ParticleEmitter> emitters = new ArrayList<>();
     private Camera camera;
 
     private RenderLayer renderLayer;
-    
+
+    private int vertexCount = 0;
+
     public ParticleRenderer(RenderLayer renderLayer) {
         this.renderLayer = renderLayer;
-        // 2 vertices, 2 texture coords, 4 color components, 1 rotation
-        this.data = MemoryUtil.memAllocFloat(MAX_PARTICLES * 2 * 2 * 4);
+        // 2 vertices, 2 texture coords, 4 color components
+        this.data = MemoryUtil.memAllocFloat(MAX_PARTICLES * ATTRIBUTES * VERTICES);
 
         this.particleVao = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(this.particleVao);
@@ -55,8 +56,6 @@ public class ParticleRenderer implements Disposable {
         GL30.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, STRIDE, Float.BYTES * 2);
         GL30.glEnableVertexAttribArray(2);
         GL30.glVertexAttribPointer(2, 4, GL11.GL_FLOAT, false, STRIDE, Float.BYTES * 4);
-        GL30.glEnableVertexAttribArray(3);
-        GL30.glVertexAttribPointer(3, 1, GL11.GL_FLOAT, false, STRIDE, Float.BYTES);
 
         this.shader = ParticleShader.create();
     }
@@ -66,47 +65,43 @@ public class ParticleRenderer implements Disposable {
     }
 
     public void renderEmitter(ParticleEmitter emitter) {
-        emitters.add(emitter);
+        for (ParticleInstance particleInstance : emitter.getParticles()) {
+            if(data.remaining() < VERTICES * ATTRIBUTES)
+                flush();
+            Matrix4f transformMatrix =
+                    MatrixUtils.createTransformMatrix(
+                            new Transform(
+                                    particleInstance.getPosition(),
+                                    particleInstance.getRotation(),
+                                    new Vector2(particleInstance.getSize().x / 2, particleInstance.getSize().y / 2),
+                                    particleInstance.getSize()));
+            Vector4f pos0 = new Vector4f(0, 0, 0, 1).mul(transformMatrix);
+            Vector4f pos1 = new Vector4f(0, 1, 0, 1).mul(transformMatrix);
+            Vector4f pos2 = new Vector4f(1, 0, 0, 1).mul(transformMatrix);
+            Vector4f pos3 = new Vector4f(1, 1, 0, 1).mul(transformMatrix);
+            float   r = particleInstance.getColor().r,
+                    g = particleInstance.getColor().g,
+                    b = particleInstance.getColor().b,
+                    a = particleInstance.getColor().a;
+            data.put(new float[] {
+                    pos1.x, pos1.y, 0, 1, r, g, b, a,
+                    pos2.x, pos2.y, 1, 0, r, g, b, a,
+                    pos0.x, pos0.y, 0, 0, r, g, b, a,
+                    pos1.x, pos1.y, 0, 1, r, g, b, a,
+                    pos2.x, pos2.y, 1, 0, r, g, b, a,
+                    pos3.x, pos3.y, 1, 1, r, g, b, a,
+            });
+            vertexCount += 6;
+        }
     }
 
     public void finish() {
-        int count = 0;
-        data.clear();
-        for (ParticleEmitter emitter : this.emitters) {
-            if(data.remaining() < 6 * 9)
-                break;
-            for (ParticleInstance particleInstance : emitter.getParticles()) {
-                if(data.remaining() < 6 * 9)
-                    break;
-                Matrix4f transformMatrix =
-                        MatrixUtils.createTransformMatrix(
-                                new Transform(
-                                        particleInstance.getPosition(),
-                                        particleInstance.getRotation(),
-                                        new Vector2(particleInstance.getSize().x / 2, particleInstance.getSize().y / 2),
-                                        particleInstance.getSize()));
-                Vector4f pos0 = new Vector4f(0, 0, 0, 1).mul(transformMatrix);
-                Vector4f pos1 = new Vector4f(0, 1, 0, 1).mul(transformMatrix);
-                Vector4f pos2 = new Vector4f(1, 0, 0, 1).mul(transformMatrix);
-                Vector4f pos3 = new Vector4f(1, 1, 0, 1).mul(transformMatrix);
-                float rot = particleInstance.getRotation();
-                float   r = particleInstance.getColor().r,
-                        g = particleInstance.getColor().g,
-                        b = particleInstance.getColor().b,
-                        a = particleInstance.getColor().a;
-                data.put(new float[] {
-                        pos1.x, pos1.y, 0, 1, r, g, b, a, rot,
-                        pos2.x, pos2.y, 1, 0, r, g, b, a, rot,
-                        pos0.x, pos0.y, 0, 0, r, g, b, a, rot,
-                        pos1.x, pos1.y, 0, 1, r, g, b, a, rot,
-                        pos2.x, pos2.y, 1, 0, r, g, b, a, rot,
-                        pos3.x, pos3.y, 1, 1, r, g, b, a, rot,
-                });
-                count += 6;
-            }
-        }
-        data.flip();
+        if(vertexCount > 0)
+            flush();
+    }
 
+    public void flush() {
+        data.flip();
         this.shader.use();
 
         Application.getInstance().bindRenderLayer(this.renderLayer);
@@ -118,9 +113,10 @@ public class ParticleRenderer implements Disposable {
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.particleVbo);
         GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, data);
 
-        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, count);
+        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
 
-        emitters.clear();
+        data.clear();
+        vertexCount = 0;
     }
 
     @Override

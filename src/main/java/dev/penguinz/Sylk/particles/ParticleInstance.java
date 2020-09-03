@@ -5,7 +5,6 @@ import dev.penguinz.Sylk.animation.values.AnimatableColor;
 import dev.penguinz.Sylk.animation.values.AnimatableFloat;
 import dev.penguinz.Sylk.animation.values.AnimatableVector2;
 import dev.penguinz.Sylk.util.Color;
-import dev.penguinz.Sylk.util.maths.Transform;
 import dev.penguinz.Sylk.util.maths.Vector2;
 
 public class ParticleInstance {

@@ -1,7 +1,7 @@
 package dev.penguinz.Sylk.assets.loaders;
 
-import dev.penguinz.Sylk.graphics.texture.Texture;
 import dev.penguinz.Sylk.assets.options.TextureOptions;
+import dev.penguinz.Sylk.graphics.texture.Texture;
 
 public class TextureLoader implements AssetLoader<Texture, TextureOptions> {
 

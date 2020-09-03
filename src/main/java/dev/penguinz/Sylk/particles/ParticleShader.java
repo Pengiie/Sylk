@@ -1,7 +1,9 @@
 package dev.penguinz.Sylk.particles;
 
 import dev.penguinz.Sylk.graphics.shader.Shader;
-import dev.penguinz.Sylk.graphics.shader.uniforms.*;
+import dev.penguinz.Sylk.graphics.shader.uniforms.ShaderUniform;
+import dev.penguinz.Sylk.graphics.shader.uniforms.ShaderUniformMat4;
+import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
 
 import java.util.ArrayList;
 import java.util.List;

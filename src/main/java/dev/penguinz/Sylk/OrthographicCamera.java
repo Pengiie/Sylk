@@ -25,6 +25,7 @@ public class OrthographicCamera extends Camera {
         super(transform);
         this.zoom = zoom;
         updateProjectionMatrix();
+        update();
     }
 
     @Override

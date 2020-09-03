@@ -8,8 +8,6 @@ import dev.penguinz.Sylk.graphics.MainRenderer;
 import dev.penguinz.Sylk.graphics.Material;
 import dev.penguinz.Sylk.graphics.RenderLayer;
 import dev.penguinz.Sylk.graphics.VAO;
-import dev.penguinz.Sylk.graphics.post.effects.BloomEffect;
-import dev.penguinz.Sylk.graphics.post.effects.VignetteEffect;
 import dev.penguinz.Sylk.input.Key;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;

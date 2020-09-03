@@ -1,6 +1,5 @@
 package dev.penguinz.Sylk.animation.values;
 
-import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.maths.Vector2;
 
 public class AnimatableVector2 extends AnimatableValue<Vector2> {

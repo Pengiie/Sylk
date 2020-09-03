@@ -5,16 +5,13 @@ import dev.penguinz.Sylk.graphics.texture.TextureParameter;
 import dev.penguinz.Sylk.util.Disposable;
 import dev.penguinz.Sylk.util.IOUtils;
 import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.*;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Arrays;
 
 public class Font implements Disposable {
 

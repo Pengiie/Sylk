@@ -4,13 +4,12 @@ import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
 import dev.penguinz.Sylk.ui.font.*;
+import dev.penguinz.Sylk.util.Alignment;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.RefContainer;
-import dev.penguinz.Sylk.util.Alignment;
 import dev.penguinz.Sylk.util.TextUtils;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
 import java.util.List;

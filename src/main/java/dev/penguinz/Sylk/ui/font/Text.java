@@ -6,8 +6,6 @@ import dev.penguinz.Sylk.graphics.VBOType;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.RefContainer;
 
-import java.util.Arrays;
-
 public class Text {
 
     public final Color color;

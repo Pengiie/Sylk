@@ -10,6 +10,7 @@ import dev.penguinz.Sylk.graphics.post.effects.PostEffect;
 import dev.penguinz.Sylk.input.InputManager;
 import dev.penguinz.Sylk.logging.LogLevel;
 import dev.penguinz.Sylk.logging.Logger;
+import dev.penguinz.Sylk.physics.PhysicsManager;
 import dev.penguinz.Sylk.util.Layer;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class Application {
     private Window window;
     private ApplicationRenderer renderer;
     private AssetManager assetManager;
+    private PhysicsManager physicsManager;
+
     private final List<Layer> layers = new ArrayList<>();
     private final List<Layer> toAttachLayers = new ArrayList<>();
     private final List<Layer> toRemoveLayers = new ArrayList<>();
@@ -89,6 +92,7 @@ public class Application {
 
         this.logger = new Logger(properties.logLevel);
         this.assetManager = new AssetManager();
+        this.physicsManager = new PhysicsManager();
 
         this.window = new Window(properties.title, properties.width, properties.height, properties.resizable, properties.fullscreen);
 
@@ -112,6 +116,7 @@ public class Application {
             for (Layer layer : layers) {
                 layer.render();
             }
+            this.physicsManager.step();
 
             layers.removeAll(toRemoveLayers);
             toRemoveLayers.clear();
@@ -154,6 +159,14 @@ public class Application {
      */
     public AssetManager getAssets() {
         return assetManager;
+    }
+
+    /**
+     * Gets the physics manager.
+     * @return the physics manager.
+     */
+    public PhysicsManager getPhysics() {
+        return physicsManager;
     }
 
     /**
