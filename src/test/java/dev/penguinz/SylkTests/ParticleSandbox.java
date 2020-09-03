@@ -3,6 +3,8 @@ package dev.penguinz.SylkTests;
 import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.ApplicationBuilder;
 import dev.penguinz.Sylk.OrthographicCamera;
+import dev.penguinz.Sylk.audio.AudioSource;
+import dev.penguinz.Sylk.audio.WavSound;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.graphics.RenderLayer;
 import dev.penguinz.Sylk.graphics.post.effects.BloomEffect;

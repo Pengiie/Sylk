@@ -4,7 +4,10 @@ import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.assets.loaders.AssetLoader;
 import dev.penguinz.Sylk.assets.loaders.FontLoader;
 import dev.penguinz.Sylk.assets.loaders.TextureLoader;
+import dev.penguinz.Sylk.assets.loaders.WavLoader;
 import dev.penguinz.Sylk.assets.options.AssetOptions;
+import dev.penguinz.Sylk.audio.Sound;
+import dev.penguinz.Sylk.audio.WavSound;
 import dev.penguinz.Sylk.graphics.texture.Texture;
 import dev.penguinz.Sylk.ui.font.Font;
 import dev.penguinz.Sylk.util.Disposable;
@@ -30,6 +33,9 @@ public class AssetManager implements Disposable {
 
         loaders.put(Font.class, new FontLoader());
         fileTypes.put("ttf", Font.class);
+
+        loaders.put(WavSound.class, new WavLoader());
+        fileTypes.put("wav", WavSound.class);
     }
 
     public AssetManager() {
@@ -68,6 +74,9 @@ public class AssetManager implements Disposable {
     }
 
     public <T> void loadAsset(String file, Class<T> classType, AssetOptions<T> options) {
+        if(classType == Sound.class) {
+            classType = getClassType(file.substring(file.length()-3));
+        }
         tasks.push(new LoadingTask<>(new AssetDescriptor<>(file, options, classType), getLoader(classType), this.executorService));
     }
 

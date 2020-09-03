@@ -6,11 +6,13 @@ import dev.penguinz.Sylk.event.window.WindowResizeEvent;
 import dev.penguinz.Sylk.input.InputManager;
 import dev.penguinz.Sylk.util.Disposable;
 import org.lwjgl.glfw.*;
+import org.lwjgl.openal.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Objects;
 
@@ -28,6 +30,8 @@ public class Window implements Disposable {
     private long windowHandle;
     private boolean hasContext = false;
     private boolean glfwInitialized = false;
+
+    private long audioDevice;
 
     private InputManager inputManager;
 
@@ -96,6 +100,10 @@ public class Window implements Disposable {
         glfwShowWindow(windowHandle);
 
         GL.createCapabilities();
+        audioDevice = ALC11.alcOpenDevice((ByteBuffer) null);
+        ALCCapabilities capabilities = ALC.createCapabilities(audioDevice);
+        ALC11.alcMakeContextCurrent(ALC11.alcCreateContext(audioDevice, (IntBuffer) null));
+        AL.createCapabilities(capabilities);
         hasContext = true;
 
         setViewport();
@@ -204,6 +212,8 @@ public class Window implements Disposable {
 
     @Override
     public void dispose() {
+        ALC11.alcCloseDevice(this.audioDevice);
+
         Callbacks.glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
 
