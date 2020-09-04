@@ -8,6 +8,10 @@ import dev.penguinz.Sylk.graphics.MainRenderer;
 import dev.penguinz.Sylk.graphics.Material;
 import dev.penguinz.Sylk.graphics.RenderLayer;
 import dev.penguinz.Sylk.graphics.VAO;
+import dev.penguinz.Sylk.graphics.lighting.AmbientLight;
+import dev.penguinz.Sylk.graphics.lighting.DirectionalLight;
+import dev.penguinz.Sylk.graphics.lighting.Light;
+import dev.penguinz.Sylk.graphics.lighting.PointLight;
 import dev.penguinz.Sylk.input.Key;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;
@@ -39,11 +43,15 @@ public class HelloTriangle implements Layer {
 
     @Override
     public void render() {
+        Light light = new AmbientLight(Color.white, 1);
+
         this.renderer.begin(camera);
-        this.renderer.render(VAO.quad, new Transform(), new Material());
+        this.renderer.addLight(light);
+        this.renderer.render(VAO.quad, new Transform(), new Material(new Color(0.4f, 0.4f, 0.8f)));
         this.renderer.finish();
 
         this.renderer2.begin(camera);
+        this.renderer2.addLight(light);
         this.renderer2.render(VAO.triangle, new Transform(new Vector2(-0.25f, 0.25f)), new Material(new Color(1, 0.5f, 1, 0.8f)));
         this.renderer2.finish();
     }

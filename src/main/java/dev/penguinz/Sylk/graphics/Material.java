@@ -38,6 +38,10 @@ public class Material {
         return texture.value;
     }
 
+    public boolean hasTexture() {
+        return texture != null && texture.value != null;
+    }
+
     public void setTexture(RefContainer<Texture> texture) {
         this.texture = texture;
     }
