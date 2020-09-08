@@ -10,7 +10,6 @@ import dev.penguinz.Sylk.graphics.post.effects.PostEffect;
 import dev.penguinz.Sylk.input.InputManager;
 import dev.penguinz.Sylk.logging.LogLevel;
 import dev.penguinz.Sylk.logging.Logger;
-import dev.penguinz.Sylk.physics.PhysicsManager;
 import dev.penguinz.Sylk.util.Layer;
 
 import java.util.ArrayList;
