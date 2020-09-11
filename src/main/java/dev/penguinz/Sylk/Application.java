@@ -28,7 +28,7 @@ public class Application {
     private Window window;
     private ApplicationRenderer renderer;
     private AssetManager assetManager;
-    private PhysicsManager physicsManager;
+    //private PhysicsManager physicsManager;
 
     private final List<Layer> layers = new ArrayList<>();
     private final List<Layer> toAttachLayers = new ArrayList<>();
@@ -91,7 +91,7 @@ public class Application {
 
         this.logger = new Logger(properties.logLevel);
         this.assetManager = new AssetManager();
-        this.physicsManager = new PhysicsManager();
+        //this.physicsManager = new PhysicsManager();
 
         this.window = new Window(properties.title, properties.width, properties.height, properties.resizable, properties.fullscreen);
 
@@ -115,7 +115,7 @@ public class Application {
             for (Layer layer : layers) {
                 layer.render();
             }
-            this.physicsManager.step();
+            //this.physicsManager.step();
 
             layers.removeAll(toRemoveLayers);
             toRemoveLayers.clear();
@@ -164,9 +164,9 @@ public class Application {
      * Gets the physics manager.
      * @return the physics manager.
      */
-    public PhysicsManager getPhysics() {
+    /*public PhysicsManager getPhysics() {
         return physicsManager;
-    }
+    }*/
 
     /**
      * Terminates the application.

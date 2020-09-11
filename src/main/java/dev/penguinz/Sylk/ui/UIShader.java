@@ -55,7 +55,7 @@ public class UIShader {
                         "  }\n"+
                         "  vec2 pos = pass_texCoord * "+UniformConstants.resolution+";\n"+
                         "  vec2 minPoint = vec2("+UIShader.roundness+");\n"+
-                        "  vec2 maxPoint = new vec2("+UniformConstants.resolution+".x - minPoint.x, "+UniformConstants.resolution+".y - minPoint.y);\n"+
+                        "  vec2 maxPoint = vec2("+UniformConstants.resolution+".x - minPoint.x, "+UniformConstants.resolution+".y - minPoint.y);\n"+
                         "  if ((pos.x < minPoint.x || pos.x > maxPoint.x) && (pos.y < minPoint.y || pos.y > maxPoint.y)) {\n" +
                         "    vec2 cornerPoint = clamp(pos, minPoint, maxPoint);\n" +
                         "    textureColor.a *= "+UIShader.roundness+" - distance(pos, cornerPoint);\n"+

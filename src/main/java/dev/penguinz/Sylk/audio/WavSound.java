@@ -1,13 +1,9 @@
 package dev.penguinz.Sylk.audio;
 
-import com.sun.media.sound.WaveFileReader;
-import dev.penguinz.Sylk.util.BufferUtils;
 import dev.penguinz.Sylk.util.IOUtils;
 import org.lwjgl.openal.AL11;
-import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class WavSound extends Sound {
 

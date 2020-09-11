@@ -21,7 +21,7 @@ public class UIImage extends UIBlock  {
     public void render(Shader shader) {
         loadMainShaderData(shader);
         shader.loadUniform(UniformConstants.hasTexture, true);
-        shader.loadUniform(UniformConstants.texture0, texture);
+        shader.loadUniform(UniformConstants.texture0, texture.value);
         GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, VAO.quad.getVertexCount());
     }
 }

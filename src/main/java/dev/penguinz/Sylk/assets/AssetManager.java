@@ -53,7 +53,9 @@ public class AssetManager implements Disposable {
 
         if(task.update()) {
             tasks.pop();
-            task.getDescriptor().options.callAssetLoadedCallback(task.getAsset());
+
+            if(task.getDescriptor().options != null)
+                task.getDescriptor().options.callAssetLoadedCallback(task.getAsset());
             assets.put(task.getDescriptor().path, task.getAsset());
             return true;
         }
