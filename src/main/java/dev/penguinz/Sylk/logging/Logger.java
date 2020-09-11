@@ -1,5 +1,7 @@
 package dev.penguinz.Sylk.logging;
 
+import dev.penguinz.Sylk.Application;
+
 public class Logger {
 
     private LogLevel currentLogLevel;
@@ -28,6 +30,10 @@ public class Logger {
 
     public void setCurrentLogLevel(LogLevel currentLogLevel) {
         this.currentLogLevel = currentLogLevel;
+    }
+
+    public static Logger getLogger() {
+        return Application.getInstance().getLogger();
     }
 
 }

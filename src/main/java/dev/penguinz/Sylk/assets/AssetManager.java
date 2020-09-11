@@ -80,6 +80,17 @@ public class AssetManager implements Disposable {
         tasks.push(new LoadingTask<>(new AssetDescriptor<>(file, options, classType), getLoader(classType), this.executorService));
     }
 
+    public void unloadAsset(String file) {
+        if(isLoaded(file)) {
+            Object asset = assets.get(file);
+            if(asset instanceof Disposable)
+                ((Disposable) asset).dispose();
+            assets.remove(file);
+            return;
+        }
+        Application.getInstance().getLogger().logWarning("Tried to unload an asset that is not loaded, "+file);
+    }
+
     private <T> AssetLoader<T, AssetOptions<T>> getLoader(Class<T> classType) {
         @SuppressWarnings("unchecked")
         AssetLoader<T, AssetOptions<T>> loader = (AssetLoader<T, AssetOptions<T>>) loaders.get(classType);
