@@ -55,6 +55,16 @@ public class UIText extends UIComponent implements UIFontRenderable {
         this.verticalAlignment = verticalAlignment;
     }
 
+    public UIText setHorizontalAlignment(Alignment alignment) {
+        this.horizontalAlignment = alignment;
+        return this;
+    }
+
+    public UIText setVerticalAlignment(Alignment alignment) {
+        this.verticalAlignment = alignment;
+        return this;
+    }
+
     private void updateTexts() {
         this.previousHeight = this.getConstraints().getHeightConstraintValue();
         if(font.value == null)

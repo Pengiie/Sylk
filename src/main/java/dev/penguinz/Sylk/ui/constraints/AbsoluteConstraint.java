@@ -11,4 +11,8 @@ public class AbsoluteConstraint extends AnimatableConstraint {
         return animatableValue.value;
     }
 
+    @Override
+    Constraint copy() {
+        return new AbsoluteConstraint(animatableValue.value);
+    }
 }

@@ -10,13 +10,13 @@ public class TaskScheduler {
     private List<Task> tasks = new ArrayList<>();
 
     public Task scheduleDelayedTask(Runnable runnable, float delay) {
-        Task task = new Task(runnable, delay * 0.001f, false);
+        Task task = new Task(runnable, delay, false);
         tasks.add(task);
         return task;
     }
 
     public Task scheduleRepeatingTask(Runnable runnable, float repeatDelay) {
-        Task task = new Task(runnable, repeatDelay * 0.001f, true);
+        Task task = new Task(runnable, repeatDelay, true);
         task.runnable.run();
         tasks.add(task);
         return task;

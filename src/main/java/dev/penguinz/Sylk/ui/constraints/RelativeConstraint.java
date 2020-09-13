@@ -14,4 +14,8 @@ public class RelativeConstraint extends AnimatableConstraint {
         return factoredParentValue;
     }
 
+    @Override
+    Constraint copy() {
+        return new RelativeConstraint(animatableValue.value);
+    }
 }

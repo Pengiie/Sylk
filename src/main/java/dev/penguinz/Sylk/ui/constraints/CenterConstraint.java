@@ -10,4 +10,9 @@ public class CenterConstraint extends Constraint {
                 parentConstraints.getRelativeLengthConstraint(this.type)/2 -
                 getConstraints().getRelativeLengthConstraint(this.type)/2;
     }
+
+    @Override
+    Constraint copy() {
+        return new CenterConstraint();
+    }
 }

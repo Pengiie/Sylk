@@ -7,6 +7,26 @@ public class UIConstraints {
     private Constraint widthConstraint;
     private Constraint heightConstraint;
 
+    public UIConstraints() {}
+
+    public UIConstraints(UIConstraints copy) {
+        this.xConstraint = copy.xConstraint.copy();
+        this.xConstraint.setType(ConstraintType.X);
+        this.xConstraint.setConstraints(this);
+
+        this.yConstraint = copy.yConstraint.copy();
+        this.yConstraint.setType(ConstraintType.Y);
+        this.yConstraint.setConstraints(this);
+
+        this.widthConstraint = copy.widthConstraint.copy();
+        this.widthConstraint.setType(ConstraintType.WIDTH);
+        this.widthConstraint.setConstraints(this);
+
+        this.heightConstraint = copy.heightConstraint.copy();
+        this.heightConstraint.setType(ConstraintType.HEIGHT);
+        this.heightConstraint.setConstraints(this);
+    }
+
     public UIConstraints setXConstraint(Constraint constraint) {
         this.xConstraint = constraint;
         this.xConstraint.setType(ConstraintType.X);

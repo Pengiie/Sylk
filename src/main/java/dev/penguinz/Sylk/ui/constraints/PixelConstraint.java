@@ -32,4 +32,8 @@ public class PixelConstraint extends AnimatableConstraint {
         return 0;
     }
 
+    @Override
+    Constraint copy() {
+        return new PixelConstraint(animatableValue.value, alignment);
+    }
 }

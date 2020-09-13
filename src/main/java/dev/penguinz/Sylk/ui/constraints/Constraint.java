@@ -27,4 +27,6 @@ public abstract class Constraint {
     protected float getValue() {
         return value;
     }
+
+    abstract Constraint copy();
 }

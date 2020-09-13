@@ -34,7 +34,7 @@ public class UIComponent {
     }
 
     void setConstraints(UIConstraints constraints) {
-        this.constraints = constraints;
+        this.constraints = new UIConstraints(constraints);
     }
 
     public void setParent(UIComponent parent) {

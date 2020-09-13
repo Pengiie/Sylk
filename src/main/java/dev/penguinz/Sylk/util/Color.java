@@ -7,6 +7,7 @@ import org.joml.Vector4f;
  */
 public class Color {
 
+    public static final Color transparent = new Color(0, 0, 0, 0);
     public static final Color white = new Color(1, 1, 1, 1);
     public static final Color black = new Color(0, 0, 0, 1);
 

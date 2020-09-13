@@ -1,5 +1,6 @@
 package dev.penguinz.Sylk.audio;
 
+import dev.penguinz.Sylk.Time;
 import dev.penguinz.Sylk.util.IOUtils;
 import org.lwjgl.openal.AL11;
 
@@ -9,6 +10,7 @@ public class WavSound extends Sound {
 
     @Override
     public SoundData getSoundData(String filepath) {
+        float time = Time.getTime();
         ByteBuffer data = IOUtils.loadFile(filepath);
         String riff = new String(new char[] {(char) data.get(0), (char) data.get(1), (char) data.get(2), (char) data.get(3)});
         String wave = new String(new char[] {(char) data.get(8), (char) data.get(9), (char) data.get(10), (char) data.get(11)});
@@ -24,11 +26,8 @@ public class WavSound extends Sound {
         }
 
         int dataSize = data.getInt(40);
-        int[] waveData = new int[dataSize/4];
-        for (int i = 0; i < waveData.length; i++) {
-            waveData[i] = data.getInt(i*4 + 44);
-        }
-
-        return new SoundData(format, sampleSize, waveData);
+        data.position(44);
+        data.limit(dataSize);
+        return new SoundData(format, sampleSize, data);
     }
 }

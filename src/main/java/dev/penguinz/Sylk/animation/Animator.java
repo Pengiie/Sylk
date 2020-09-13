@@ -80,7 +80,7 @@ public class Animator {
             Interpolator<T> interpolator = ((Interpolator<T>) interpolators.get(animationData.value.getClassType()));
             animationData.value.value = interpolator.interpolate(animationData.from, animationData.to, progress);
         } else
-            animationData.value.value = progress >= 1 ? animationData.from : animationData.to;
+            animationData.value.value = progress <= 1 ? animationData.from : animationData.to;
     }
 
 }

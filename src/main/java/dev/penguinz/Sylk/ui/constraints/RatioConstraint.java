@@ -11,4 +11,8 @@ public class RatioConstraint extends AnimatableConstraint {
         return this.getConstraints().getOppositeConstraint(this.type) * animatableValue.value;
     }
 
+    @Override
+    Constraint copy() {
+        return new RatioConstraint(animatableValue.value);
+    }
 }

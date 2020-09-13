@@ -39,6 +39,8 @@ public class Animation {
 
     public Animation setCompletionCallback(Runnable callback) {
         this.callback = callback;
+        if(this.reversedAnimation != null)
+            this.reversedAnimation.callback = this.callback;
         return this;
     }
 

@@ -3,6 +3,8 @@ package dev.penguinz.Sylk.audio;
 import dev.penguinz.Sylk.util.Disposable;
 import org.lwjgl.openal.AL11;
 
+import java.nio.ByteBuffer;
+
 public abstract class Sound implements Disposable {
 
     int id;
@@ -25,9 +27,9 @@ public abstract class Sound implements Disposable {
 
     public static class SoundData {
         public final int format, frequency;
-        public final int[] data;
+        public final ByteBuffer data;
 
-        public SoundData(int format, int frequency, int[] data) {
+        public SoundData(int format, int frequency, ByteBuffer data) {
             this.format = format;
             this.frequency = frequency;
             this.data = data;
