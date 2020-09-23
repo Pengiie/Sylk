@@ -3,6 +3,7 @@ package dev.penguinz.Sylk;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.event.window.WindowCloseEvent;
 import dev.penguinz.Sylk.event.window.WindowResizeEvent;
+import dev.penguinz.Sylk.graphics.texture.Texture;
 import dev.penguinz.Sylk.input.InputManager;
 import dev.penguinz.Sylk.util.Disposable;
 import org.lwjgl.glfw.*;
@@ -26,6 +27,7 @@ public class Window implements Disposable {
     private int width, height;
     private final boolean resizable;
     private boolean fullscreen;
+    private final String icon;
 
     private long windowHandle;
     private boolean hasContext = false;
@@ -49,12 +51,13 @@ public class Window implements Disposable {
         }
     };
 
-    public Window(String title, int width, int height, boolean resizable, boolean fullscreen) {
+    public Window(String title, int width, int height, boolean resizable, boolean fullscreen, String icon) {
         this.title = title;
         this.windowedWidth = this.width = width;
         this.windowedHeight = this.height = height;
         this.resizable = resizable;
         this.fullscreen = fullscreen;
+        this.icon = icon;
 
         init();
     }
@@ -85,6 +88,18 @@ public class Window implements Disposable {
 
         glfwSetWindowCloseCallback(windowHandle, closeCallback);
         glfwSetFramebufferSizeCallback(windowHandle, resizeCallback);
+
+        GLFWImage image = GLFWImage.malloc();
+        GLFWImage.Buffer imageBuf = GLFWImage.malloc(1);
+        Texture iconTexture = new Texture(null, null);
+        iconTexture.loadAsync(icon);
+        if(iconTexture.getChannels() != 4)
+            throw new RuntimeException("Icon texture must be in RGBA format.");
+
+        image.set(iconTexture.getWidth(), iconTexture.getHeight(), iconTexture.getData());
+        imageBuf.put(0, image);
+        glfwSetWindowIcon(windowHandle, imageBuf);
+
 
         this.inputManager = new InputManager(windowHandle, this::dispatchEvent);
 

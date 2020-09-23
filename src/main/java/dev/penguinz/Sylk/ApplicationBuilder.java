@@ -12,6 +12,7 @@ public class ApplicationBuilder {
     private int width = 1280, height = 720;
     private boolean resizable = false, fullscreen = false;
     private Layer[] layers = new Layer[0];
+    private String icon = null, iconSmall = null;
     private final LogLevel logLevel = LogLevel.INFO;
 
     /**
@@ -74,8 +75,18 @@ public class ApplicationBuilder {
         return this;
     }
 
+    /**
+     * Sets the window icon to the specified image.
+     * @param icon path to the image.
+     * @return a reference to this object.
+     */
+    public ApplicationBuilder setIcon(String icon) {
+        this.icon = icon;
+        return this;
+    }
+
     private Application build() {
-        return new Application(title, width, height, resizable, fullscreen, layers, logLevel);
+        return new Application(title, width, height, resizable, fullscreen, icon, layers, logLevel);
     }
 
     /**

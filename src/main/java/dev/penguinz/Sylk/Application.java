@@ -38,9 +38,9 @@ public class Application {
 
     private int fps;
 
-    Application(String title, int width, int height, boolean resizable, boolean fullscreen, Layer[] startupLayers, LogLevel logLevel) {
+    Application(String title, int width, int height, boolean resizable, boolean fullscreen, String icon, Layer[] startupLayers, LogLevel logLevel) {
         instance = this;
-        this.properties = new ApplicationPropertySet(title, width, height, resizable, fullscreen, startupLayers, logLevel);
+        this.properties = new ApplicationPropertySet(title, width, height, resizable, fullscreen, icon, startupLayers, logLevel);
     }
 
     public void attachLayers(Layer... layers) {
@@ -93,7 +93,7 @@ public class Application {
         this.assetManager = new AssetManager();
         //this.physicsManager = new PhysicsManager();
 
-        this.window = new Window(properties.title, properties.width, properties.height, properties.resizable, properties.fullscreen);
+        this.window = new Window(properties.title, properties.width, properties.height, properties.resizable, properties.fullscreen, properties.icon);
 
         this.renderer = new ApplicationRenderer();
 
@@ -235,15 +235,17 @@ public class Application {
         public final int width, height;
         public final boolean resizable;
         public final boolean fullscreen;
+        public final String icon;
         public final Layer[] startupLayers;
         public final LogLevel logLevel;
 
-        public ApplicationPropertySet(String title, int width, int height, boolean resizable, boolean fullscreen, Layer[] startupLayers, LogLevel logLevel) {
+        public ApplicationPropertySet(String title, int width, int height, boolean resizable, boolean fullscreen, String icon, Layer[] startupLayers, LogLevel logLevel) {
             this.title = title;
             this.width = width;
             this.height = height;
             this.resizable = resizable;
             this.fullscreen = fullscreen;
+            this.icon = icon;
             this.startupLayers = startupLayers;
             this.logLevel = logLevel;
         }
