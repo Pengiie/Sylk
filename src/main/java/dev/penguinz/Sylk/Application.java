@@ -218,6 +218,11 @@ public class Application {
         this.renderer.renderToLayer(layer);
     }
 
+    /**
+     * Adds a post processing effect to the specified render layer.
+     * @param layer the render layer to add the effect to.
+     * @param effect the effect to add to the render layer. {@link dev.penguinz.Sylk.graphics.post.effects.BloomEffect}, {@link dev.penguinz.Sylk.graphics.post.effects.VignetteEffect}
+     */
     public void addPostEffect(RenderLayer layer, PostEffect effect) {
         this.renderer.addEffect(layer, effect);
     }

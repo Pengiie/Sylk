@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -89,17 +90,20 @@ public class Window implements Disposable {
         glfwSetWindowCloseCallback(windowHandle, closeCallback);
         glfwSetFramebufferSizeCallback(windowHandle, resizeCallback);
 
-        GLFWImage image = GLFWImage.malloc();
-        GLFWImage.Buffer imageBuf = GLFWImage.malloc(1);
-        Texture iconTexture = new Texture(null, null);
-        iconTexture.loadAsync(icon);
-        if(iconTexture.getChannels() != 4)
-            throw new RuntimeException("Icon texture must be in RGBA format.");
+        if(icon != null) {
+            try(MemoryStack stack = MemoryStack.stackPush()) {
+                GLFWImage image = GLFWImage.mallocStack(stack);
+                GLFWImage.Buffer imageBuf = GLFWImage.mallocStack(1, stack);
+                Texture iconTexture = new Texture(null, null);
+                iconTexture.loadAsync(icon);
+                if (iconTexture.getChannels() != 4)
+                    throw new RuntimeException("Icon texture must be in RGBA format.");
 
-        image.set(iconTexture.getWidth(), iconTexture.getHeight(), iconTexture.getData());
-        imageBuf.put(0, image);
-        glfwSetWindowIcon(windowHandle, imageBuf);
-
+                image.set(iconTexture.getWidth(), iconTexture.getHeight(), iconTexture.getData());
+                imageBuf.put(0, image);
+                glfwSetWindowIcon(windowHandle, imageBuf);
+            }
+        }
 
         this.inputManager = new InputManager(windowHandle, this::dispatchEvent);
 

@@ -1,7 +1,14 @@
 package dev.penguinz.Sylk.ui.constraints;
 
+/**
+ * Positions and scales the UI Element with a relative factor to the parents scale. Most useful constraint for flexible UIs.
+ */
 public class RelativeConstraint extends AnimatableConstraint {
 
+    /**
+     * Creates a relative constraint using the given scaling factor.
+     * @param factor the value to scale from.
+     */
     public RelativeConstraint(float factor) {
         super(factor);
     }

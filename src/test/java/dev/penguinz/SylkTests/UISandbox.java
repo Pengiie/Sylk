@@ -46,8 +46,8 @@ public class UISandbox implements Layer {
         this.increasePixels = new Animation(1).
                 addValue(component.getConstraints().getYAnimatableConstraint(), 50, 100);
 
-        Application.getInstance().getAssets().loadAsset("times.ttf",
-                new FontOptions().
+        Application.getInstance().getAssets().loadAsset("arial.ttf",
+                new FontOptions().setPixelHeight(32).
                 setAssetLoadedCallback(font -> this.font.value = font));
     }
 

@@ -3,14 +3,26 @@ package dev.penguinz.Sylk.ui.constraints;
 import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.util.Alignment;
 
+/**
+ * Positions the UI Element with pixels relative to the alignment.
+ */
 public class PixelConstraint extends AnimatableConstraint {
 
     private Alignment alignment;
 
+    /**
+     * Creates a new pixel constraint with a set pixel offset from left or top.
+     * @param pixels the pixel offset.
+     */
     public PixelConstraint(float pixels) {
         this(pixels, Alignment.LEFT);
     }
 
+    /**
+     * Creates a new pixel constraint with a set pixel offset from the given alignment.
+     * @param pixels the pixel offset.
+     * @param alignment the alignment from where to offset.
+     */
     public PixelConstraint(float pixels, Alignment alignment) {
         super(pixels);
         this.alignment = alignment;

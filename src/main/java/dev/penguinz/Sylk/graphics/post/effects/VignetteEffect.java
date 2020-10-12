@@ -25,6 +25,11 @@ public class VignetteEffect implements PostEffect {
     private final Shader vignetteShader;
     private int finalBuffer, finalTexture;
 
+    /**
+     * Creates a vignette effect with the given properties. Should be added to the scene before bloom to have the desired effect.
+     * @param radius the hard radius of the vignette from 0 through 1. The closer to 0 the farther in the screen.
+     * @param softness the soft radius of the vignette from 0 through 1. The closer to 0 the farther in the screen.
+     */
     public VignetteEffect(float radius, float softness) {
         this.radius = new AnimatableFloat(radius);
         this.softness = new AnimatableFloat(softness);

@@ -10,6 +10,10 @@ public class RigidBody {
         this.velocity = new Vector2();
     }
 
+    public void addForce(Vector2 force, ForceType forceType) {
+        
+    }
+
     public Vector2 getVelocity() {
         return velocity;
     }

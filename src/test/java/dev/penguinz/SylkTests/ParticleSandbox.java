@@ -8,6 +8,7 @@ import dev.penguinz.Sylk.audio.WavSound;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.graphics.RenderLayer;
 import dev.penguinz.Sylk.graphics.post.effects.BloomEffect;
+import dev.penguinz.Sylk.graphics.post.effects.VignetteEffect;
 import dev.penguinz.Sylk.particles.Particle;
 import dev.penguinz.Sylk.particles.ParticleBuilder;
 import dev.penguinz.Sylk.particles.ParticleEmitter;
@@ -41,6 +42,7 @@ public class ParticleSandbox implements Layer {
         this.particleRenderer = new ParticleRenderer(RenderLayer.RENDER0);
         this.emitter = new ParticleEmitter(new Vector2());
 
+        Application.getInstance().addPostEffect(RenderLayer.RENDER0, new VignetteEffect(0.8f, 0.4f));
         Application.getInstance().addPostEffect(RenderLayer.RENDER0, new BloomEffect(camera, 20, 4, 1.2f, 1));
     }
 

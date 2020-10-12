@@ -1,5 +1,8 @@
 package dev.penguinz.Sylk.ui.constraints;
 
+/**
+ * Centers the UI Element on the given axis.
+ */
 public class CenterConstraint extends Constraint {
 
     @Override

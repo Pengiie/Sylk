@@ -39,6 +39,14 @@ public class BloomEffect implements PostEffect {
     private final Shader blendShader;
     private int finalBuffer, finalTexture;
 
+    /**
+     * Creates a bloom effect with the given properties.
+     * @param camera the camera used to render the current scene.
+     * @param size The size of the bloom around the objects.
+     * @param smoothness The smoothness of the bloom.
+     * @param strength The intensity of the bloom effect on the scene.
+     * @param opacity The opacity of the bloom effect.
+     */
     public BloomEffect(OrthographicCamera camera, float size, int smoothness, float strength, float opacity) {
         this.camera = camera;
         this.startWidth = Application.getInstance().getWindowWidth();
