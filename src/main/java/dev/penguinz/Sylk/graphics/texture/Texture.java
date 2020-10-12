@@ -89,6 +89,14 @@ public class Texture implements Disposable {
         return height;
     }
 
+    public ByteBuffer getData() {
+        return data;
+    }
+
+    public int getChannels() {
+        return channels;
+    }
+
     @Override
     public void dispose() {
         GL11.glDeleteTextures(id);
