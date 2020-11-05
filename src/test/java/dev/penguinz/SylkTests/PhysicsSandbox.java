@@ -8,6 +8,7 @@ import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.graphics.MainRenderer;
 import dev.penguinz.Sylk.graphics.Material;
 import dev.penguinz.Sylk.graphics.VAO;
+import dev.penguinz.Sylk.physics.RigidBody;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;
 import dev.penguinz.Sylk.util.RefContainer;
@@ -17,17 +18,17 @@ import dev.penguinz.Sylk.util.maths.Vector2;
 public class PhysicsSandbox implements Layer {
 
     private RefContainer<Transform> transform;
-    //private RigidBody rigidBody;
+    private RigidBody rigidBody;
 
     private RefContainer<Transform> platformTransform;
-    //private RigidBody platform;
+    private RigidBody platform;
 
     private OrthographicCamera camera;
     private MainRenderer renderer;
 
     @Override
     public void init() {
-        //Application.getInstance().getPhysics().setGravity(new Vector2(0, 0));
+        Application.getInstance().getPhysics().setGravity(new Vector2(0, 0));
 
         this.transform = new RefContainer<>(new Transform(new Vector2(), new Vector2(0.5f)));
         /*this.rigidBody = new RigidBody(transform, RigidBody.Type.DYNAMIC, new BoxCollider(transform.value)).
