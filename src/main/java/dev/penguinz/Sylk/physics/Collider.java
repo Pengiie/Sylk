@@ -2,10 +2,12 @@ package dev.penguinz.Sylk.physics;
 
 public interface Collider {
 
-    boolean collideBoundingBox();
+    CollisionData isCollidingWithAABB(AABB other);
 
-    default boolean isColliding(Collider other) {
-        return false;
+    default CollisionData isColliding(Collider other) {
+        if(other instanceof AABB)
+            return isCollidingWithAABB((AABB) other);
+        return new CollisionData(false, null, 0);
     }
 
 }

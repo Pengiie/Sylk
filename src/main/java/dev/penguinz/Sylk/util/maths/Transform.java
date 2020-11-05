@@ -36,6 +36,16 @@ public class Transform {
         this.rotationAnchor.y = y * yRatio;
     }
 
+    @Override
+    public String toString() {
+        return "Transform{" +
+                "position=" + position +
+                ", rotationAnchor=" + rotationAnchor +
+                ", rotation=" + rotation +
+                ", scale=" + scale +
+                '}';
+    }
+
     public Vector2 getScale() {
         return scale;
     }

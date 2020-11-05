@@ -116,7 +116,7 @@ public class Application {
             for (Layer layer : layers) {
                 layer.render();
             }
-            //this.physicsManager.step();
+            this.physicsWorld.step(Time.deltaTime());
 
             layers.removeAll(toRemoveLayers);
             toRemoveLayers.clear();

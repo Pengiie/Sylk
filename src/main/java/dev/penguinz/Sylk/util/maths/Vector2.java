@@ -128,6 +128,16 @@ public class Vector2 {
         return newVector;
     }
 
+    /**
+     * Gives the dot product between the two vectors.
+     * @param left the left hand vector.
+     * @param right the right hand vector.
+     * @return the dot product.
+     */
+    public static float dot(Vector2 left, Vector2 right) {
+        return left.x * right.x + left.y * right.y;
+    }
+
     public boolean equals(Vector2 other) {
         return this.x == other.x && this.y == other.y;
     }

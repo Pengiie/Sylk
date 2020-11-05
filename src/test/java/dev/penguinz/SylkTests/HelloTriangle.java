@@ -12,6 +12,8 @@ import dev.penguinz.Sylk.graphics.lighting.AmbientLight;
 import dev.penguinz.Sylk.graphics.lighting.DirectionalLight;
 import dev.penguinz.Sylk.graphics.lighting.Light;
 import dev.penguinz.Sylk.graphics.lighting.PointLight;
+import dev.penguinz.Sylk.graphics.post.effects.BloomEffect;
+import dev.penguinz.Sylk.graphics.post.effects.VignetteEffect;
 import dev.penguinz.Sylk.input.Key;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;
@@ -31,7 +33,7 @@ public class HelloTriangle implements Layer {
         this.renderer2 = new MainRenderer(RenderLayer.RENDER1);
 
         //Application.getInstance().addPostEffect(RenderLayer.RENDER0, new BloomEffect(camera, 30f, 12, 1f));
-        //Application.getInstance().addPostEffect(RenderLayer.RENDER1, new VignetteEffect(0.6f, 0.4f));
+        Application.getInstance().addPostEffect(RenderLayer.RENDER1, new VignetteEffect(0.6f, 0.4f));
     }
 
     @Override

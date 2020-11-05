@@ -52,7 +52,7 @@ public class ParticleSandbox implements Layer {
             Vector2 position = camera.convertToWorldCoordinates(new Vector2(Application.getInstance().getInput().getMousePosX(), Application.getInstance().getInput().getMousePosY()));
             taskScheduler.scheduleRepeatingTask(() -> {
                 emitter.position = position;
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 1000; i++) {
                     emitter.initialRotation = (float) (Math.random() * Math.PI * 2);
                     emitter.initialSize = new Vector2((float) Math.random() / 4 - 0.125f);
                     emitter.emit(particle, new Vector2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f), 4);
