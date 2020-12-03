@@ -14,9 +14,12 @@ import dev.penguinz.Sylk.graphics.lighting.Light;
 import dev.penguinz.Sylk.graphics.lighting.PointLight;
 import dev.penguinz.Sylk.graphics.post.effects.BloomEffect;
 import dev.penguinz.Sylk.graphics.post.effects.VignetteEffect;
+import dev.penguinz.Sylk.graphics.texture.SubTextureData;
+import dev.penguinz.Sylk.graphics.texture.Texture;
 import dev.penguinz.Sylk.input.Key;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;
+import dev.penguinz.Sylk.util.RefContainer;
 import dev.penguinz.Sylk.util.maths.Transform;
 import dev.penguinz.Sylk.util.maths.Vector2;
 
@@ -26,11 +29,17 @@ public class HelloTriangle implements Layer {
     private MainRenderer renderer;
     private MainRenderer renderer2;
 
+    private RefContainer<Texture> texture;
+
     @Override
     public void init() {
         this.camera = new OrthographicCamera();
         this.renderer = new MainRenderer();
         this.renderer2 = new MainRenderer(RenderLayer.RENDER1);
+
+        Application.getInstance().getAssets().loadAsset("test.png", Texture.class);
+        Application.getInstance().getAssets().finishLoading();
+        this.texture = new RefContainer<>(Application.getInstance().getAssets().getAsset("test.png"));
 
         //Application.getInstance().addPostEffect(RenderLayer.RENDER0, new BloomEffect(camera, 30f, 12, 1f));
         Application.getInstance().addPostEffect(RenderLayer.RENDER1, new VignetteEffect(0.6f, 0.4f));
@@ -49,7 +58,7 @@ public class HelloTriangle implements Layer {
 
         this.renderer.begin(camera);
         this.renderer.addLight(light);
-        this.renderer.render(VAO.quad, new Transform(), new Material(new Color(0.4f, 0.4f, 0.8f)));
+        this.renderer.render(VAO.quad, new Transform(), new Material(texture));
         this.renderer.finish();
 
         this.renderer2.begin(camera);

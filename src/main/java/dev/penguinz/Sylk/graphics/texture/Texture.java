@@ -41,6 +41,7 @@ public class Texture implements Disposable {
             IntBuffer height = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
+            STBImage.stbi_set_flip_vertically_on_load(true);
             this.data = STBImage.stbi_load_from_memory(this.data, width, height, channels, 0);
 
             this.width = width.get(0);

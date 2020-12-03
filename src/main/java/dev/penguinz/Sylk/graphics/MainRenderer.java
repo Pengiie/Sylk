@@ -64,8 +64,11 @@ public class MainRenderer extends Renderer {
 
             shader.loadUniform(UniformConstants.color, renderItem.material.color.toVector());
             shader.loadUniform(UniformConstants.hasTexture, renderItem.material.hasTexture());
-            if(renderItem.material.hasTexture())
+            if(renderItem.material.hasTexture()) {
                 shader.loadUniform(UniformConstants.texture0, renderItem.material.getTexture());
+                shader.loadUniform(MainShader.textureOffset, renderItem.material.subTextureData.getMin());
+                shader.loadUniform(MainShader.textureSize, renderItem.material.subTextureData.getSize());
+            }
 
             int ambientCounter = 0, pointCounter = 0, directionalCounter = 0;
             for (Light light : lights) {
@@ -79,11 +82,11 @@ public class MainRenderer extends Renderer {
                     shader.loadUniform(MainShader.pointLight+"["+pointCounter+"].intensity", ((PointLight) light).intensity);
                     pointCounter++;
                 } else if(light instanceof DirectionalLight) {
-                    shader.loadUniform(MainShader.directionalLight+"["+pointCounter+"].color", light.color.toVector());
-                    shader.loadUniform(MainShader.directionalLight+"["+pointCounter+"].position", ((DirectionalLight) light).position);
-                    shader.loadUniform(MainShader.directionalLight+"["+pointCounter+"].direction", ((DirectionalLight) light).direction);
-                    shader.loadUniform(MainShader.directionalLight+"["+pointCounter+"].intensity", ((DirectionalLight) light).intensity);
-                    shader.loadUniform(MainShader.directionalLight+"["+pointCounter+"].angle", ((DirectionalLight) light).angle);
+                    shader.loadUniform(MainShader.directionalLight+"["+directionalCounter+"].color", light.color.toVector());
+                    shader.loadUniform(MainShader.directionalLight+"["+directionalCounter+"].position", ((DirectionalLight) light).position);
+                    shader.loadUniform(MainShader.directionalLight+"["+directionalCounter+"].direction", ((DirectionalLight) light).direction);
+                    shader.loadUniform(MainShader.directionalLight+"["+directionalCounter+"].intensity", ((DirectionalLight) light).intensity);
+                    shader.loadUniform(MainShader.directionalLight+"["+directionalCounter+"].angle", ((DirectionalLight) light).angle);
                     directionalCounter++;
                 }
             }

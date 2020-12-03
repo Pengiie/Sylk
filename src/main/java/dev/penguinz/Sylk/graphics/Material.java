@@ -21,7 +21,7 @@ public class Material {
     }
 
     public Material(RefContainer<Texture> texture) {
-        this(new Color(Color.white), texture, new SubTextureData(new Vector2(), new Vector2()));
+        this(new Color(Color.white), texture, new SubTextureData(new Vector2(), new Vector2(1, 1)));
     }
 
     public Material(RefContainer<Texture> texture, SubTextureData subTexture) {

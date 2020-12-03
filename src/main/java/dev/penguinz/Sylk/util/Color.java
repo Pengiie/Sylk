@@ -2,6 +2,8 @@ package dev.penguinz.Sylk.util;
 
 import org.joml.Vector4f;
 
+import java.util.Arrays;
+
 /**
  * A four component red, green, blue, and alpha color.
  */
@@ -46,6 +48,22 @@ public class Color {
         this.g = g > 1 ? g / 255 : g;
         this.b = b > 1 ? b / 255 : b;
         this.a = a > 1 ? a / 255 : a;
+    }
+
+    /**
+     * Creates a new color with the specified hex value.
+     * @param hexcode a hex code such as #7e57c2
+     */
+    public Color(String hexcode) {
+        if((hexcode.length() > 7 || hexcode.length() < 6))
+            throw new IllegalArgumentException("Was given invalid hex color of \""+hexcode+"\"");
+        if(hexcode.length() == 6)
+            hexcode = "#" + hexcode;
+        String[] segments = new String[] {hexcode.substring(1, 3), hexcode.substring(3, 5), hexcode.substring(5, 7)};
+        this.r = (float) Integer.valueOf(segments[0], 16) / 255;
+        this.g = (float) Integer.valueOf(segments[1], 16) / 255;
+        this.b = (float) Integer.valueOf(segments[2], 16) / 255;
+        this.a = 1;
     }
 
     public boolean equals(Color other) {
