@@ -2,10 +2,12 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {
     id 'java'
+    id("com.jfrog.bintray") version "1.8.1"
+    id 'maven-publish'
 }
 
 group 'dev.penguinz'
-version '1.0-SNAPSHOT'
+version '0.1.0'
 
 sourceCompatibility = 1.8
 
@@ -41,4 +43,53 @@ dependencies {
         runtimeOnly "org.lwjgl:lwjgl-stb::"+os
     }
     implementation "org.joml:joml:${jomlVersion}"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        BintrayPublish(MavenPublication) {
+            from components.java
+            groupId 'dev.penguinz'
+            artifactId 'Sylk'
+            version project.version
+            artifact(sourcesJar)
+            artifact(javadocJar)
+        }
+    }
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.get("BINTRAY_USER")
+    key = properties.get("BINTRAY_KEY");
+    publications = ['BintrayPublishRelease']
+    publish = true
+    pkg {
+        repo = 'Sylk'
+        name = 'Sylk'
+        userOrg = 'penguinz'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/Penguinz22/Sylk.git'
+        version {
+            name = project.version as String
+            released = new Date().toString()
+        }
+    }
 }
