@@ -31,6 +31,8 @@ public class Window implements Disposable {
     private final String icon;
 
     private long windowHandle;
+    private Cursor cursorType = Cursor.ARROW;
+    private long cursor;
     private boolean hasContext = false;
     private boolean glfwInitialized = false;
 
@@ -89,6 +91,9 @@ public class Window implements Disposable {
 
         glfwSetWindowCloseCallback(windowHandle, closeCallback);
         glfwSetFramebufferSizeCallback(windowHandle, resizeCallback);
+
+        cursor = glfwCreateStandardCursor(cursorType.glfwType);
+        glfwSetCursor(windowHandle, cursor);
 
         if(icon != null) {
             try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -165,7 +170,13 @@ public class Window implements Disposable {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
     }
 
-    public void update() {
+    public void update(Cursor cursor) {
+        if(cursor != this.cursorType) {
+            glfwDestroyCursor(this.cursor);
+            this.cursorType = cursor;
+            this.cursor = glfwCreateStandardCursor(cursor.glfwType);
+            glfwSetCursor(this.windowHandle, this.cursor);
+        }
         glfwSwapBuffers(windowHandle);
         inputManager.clearInputs();
         glfwPollEvents();

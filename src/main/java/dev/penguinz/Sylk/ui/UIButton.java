@@ -1,5 +1,7 @@
 package dev.penguinz.Sylk.ui;
 
+import dev.penguinz.Sylk.Application;
+import dev.penguinz.Sylk.Cursor;
 import dev.penguinz.Sylk.animation.values.AnimatableColor;
 import dev.penguinz.Sylk.animation.values.AnimatableValue;
 import dev.penguinz.Sylk.ui.constraints.RelativeConstraint;
@@ -45,6 +47,11 @@ public class UIButton extends UIBlock implements UIEventListener {
     @Override
     public void onMouseExit() {
         this.color.value = new Color(this.previousColor);
+    }
+
+    @Override
+    public void onMouseHover(float mouseX, float mouseY) {
+        Application.getInstance().setCursor(Cursor.HAND);
     }
 
     @Override

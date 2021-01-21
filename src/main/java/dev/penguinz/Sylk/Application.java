@@ -27,6 +27,7 @@ public class Application {
 
     private Logger logger;
     private Window window;
+    private Cursor cursor = Cursor.ARROW;
     private ApplicationRenderer renderer;
     private AssetManager assetManager;
     private World physicsWorld;
@@ -87,6 +88,10 @@ public class Application {
         }
     }
 
+    public void setCursor(Cursor cursor) {
+        this.cursor = cursor;
+    }
+
     public void run() {
         isRunning = true;
 
@@ -116,15 +121,15 @@ public class Application {
             for (Layer layer : layers) {
                 layer.render();
             }
-            this.physicsWorld.step(Time.deltaTime());
+            this.physicsWorld.step(Time.deltaTime() );
 
             layers.removeAll(toRemoveLayers);
             toRemoveLayers.clear();
 
-
             this.renderer.render();
 
-            window.update();
+            window.update(cursor);
+            this.cursor = Cursor.ARROW;
         }
         dispose();
     }
