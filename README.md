@@ -6,28 +6,4 @@ Sylk is a 2D game engine written in Java and is currently in development. With g
 ## Setting Up
 
 You can use Sylk to write your own games and deploy them as a bundled executable jar file for others to play and can be integrated within your maven or gradle project.
-
-Maven:
-
-    <repository>
-      <id>central</id>
-      <name>bintray</name>
-      <url>https://jcenter.bintray.com</url>
-    </repository>
-    
-    <dependency>
-      <groupId>dev.penguinz</groupId>
-      <artifactId>Sylk</artifactId>
-      <version>0.1.0</version>
-      <type>pom</type>
-    </dependency>
-<br>
-Gradle:
-
-    repositories {
-        jcenter()
-    }
-    
-    dependencies {
-        implementation "dev.penguinz:Sylk:VERSION"
-    }
+A more indepth wiki about Sylk and how to use it can be found [here](https://github.com/Penguinz22/Sylk/wiki).
