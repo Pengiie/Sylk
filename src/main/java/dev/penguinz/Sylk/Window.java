@@ -177,6 +177,7 @@ public class Window implements Disposable {
             this.cursor = glfwCreateStandardCursor(cursor.glfwType);
             glfwSetCursor(this.windowHandle, this.cursor);
         }
+
         glfwSwapBuffers(windowHandle);
         inputManager.clearInputs();
         glfwPollEvents();

@@ -45,6 +45,10 @@ public class Application {
         this.properties = new ApplicationPropertySet(title, width, height, resizable, fullscreen, icon, startupLayers, logLevel);
     }
 
+    /**
+     * Attaches a new layer to the application.
+     * @param layers the layers to attach.
+     */
     public void attachLayers(Layer... layers) {
         for (Layer layer : layers) {
             this.toAttachLayers.add(layer);
@@ -52,6 +56,10 @@ public class Application {
         }
     }
 
+    /**
+     * Removes the given layers from the application.
+     * @param layers the layers to remove.
+     */
     public void removeLayers(Layer... layers) {
         for (Layer layer : layers) {
             this.toRemoveLayers.add(layer);
@@ -59,6 +67,11 @@ public class Application {
         }
     }
 
+    /**
+     * Returns the first layer that matches a given class.
+     * @param layerClass the class to match with.
+     * @return the first found layer matching the class.
+     */
     public <T extends Layer> T getLayer(Class<T> layerClass) {
         for (Layer layer : layers) {
             if(layer.getClass().isAssignableFrom(layerClass)) {
@@ -88,6 +101,10 @@ public class Application {
         }
     }
 
+    /**
+     * Sets the window's cursor.
+     * @param cursor the cursor type.
+     */
     public void setCursor(Cursor cursor) {
         this.cursor = cursor;
     }

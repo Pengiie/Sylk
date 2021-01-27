@@ -9,7 +9,7 @@ import dev.penguinz.Sylk.util.RefContainer;
 public class Text {
 
     public final Color color;
-    private final int pixelHeight;
+    public final int pixelHeight;
     private final String text;
     public final RefContainer<Font> font;
 
@@ -31,7 +31,7 @@ public class Text {
     private void calculateVao() {
         if(this.font.value == null)
             return;
-        Font font = this.font.value;
+        CharacterSet font = this.font.value.getFont(pixelHeight);
         float[] positions = new float[text.length()*12];
         float[] textureCoords = new float[text.length()*12];
 
@@ -59,7 +59,7 @@ public class Text {
             for(int index = 0; index < indices.length; index++) {
                 positions[posIndex] = xPos + (indices[index] == 0 ? 0 : width);
                 textureCoords[posIndex++] = indices[index++] == 0 ? charData.texturePosition.x : charData.texturePosition.z;
-                positions[posIndex] = font.getLineHeight(font.getFontScale(pixelHeight)) - (indices[index] == 0 ? 0 : height) + descent;
+                positions[posIndex] = font.getLineHeight() - (indices[index] == 0 ? 0 : height) + descent;
                 textureCoords[posIndex++] = indices[index] == 0 ? charData.texturePosition.w : charData.texturePosition.y;
             }
 

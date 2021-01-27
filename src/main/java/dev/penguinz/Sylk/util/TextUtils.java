@@ -1,6 +1,7 @@
 package dev.penguinz.Sylk.util;
 
 import dev.penguinz.Sylk.ui.font.Character;
+import dev.penguinz.Sylk.ui.font.CharacterSet;
 import dev.penguinz.Sylk.ui.font.Font;
 
 import java.util.ArrayList;
@@ -27,11 +28,10 @@ public class TextUtils {
 
     public static float getTextWidth(String text, float pixelHeight, Font font) {
         float width = 0;
+        CharacterSet characterSet = font.getFont((int) pixelHeight);
         for (int i = 0; i < text.length(); i++) {
-            Character charData = font.getCharacterData()[text.charAt(i)-Font.START_CHAR];
-            width +=
-                    charData.advance * font.getCharacterScale() * pixelHeight +
-                            (charData.position.z - charData.position.x) * font.getCharacterScale() * pixelHeight;
+            Character charData = characterSet.getCharacterData()[text.charAt(i)-Font.START_CHAR];
+            width += charData.advance + (charData.position.z - charData.position.x);
         }
         return width;
     }

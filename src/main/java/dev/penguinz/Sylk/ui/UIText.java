@@ -24,7 +24,7 @@ public class UIText extends UIComponent implements UIFontRenderable {
     private TextHeight height;
     private boolean wrapText;
     public Alignment horizontalAlignment, verticalAlignment;
-    public float lineThickness = 1;
+    public float lineThickness = 1.05f;
 
     private boolean loadedTexts = false;
     private float previousHeight;
@@ -104,13 +104,14 @@ public class UIText extends UIComponent implements UIFontRenderable {
         int pixelHeight = height.getPixelHeight(this.getConstraints());
 
         shader.loadUniform(UniformConstants.color, color.toVector());
-        shader.loadUniform(UniformConstants.texture0, font.value.getTexture());
         shader.loadUniform(FontShader.lineThickness, lineThickness);
 
         float xPos = this.getConstraints().getXConstraintValue();
         float width = this.getConstraints().getWidthConstraintValue();
 
-        float totalHeight = texts.size() * font.value.getNewLineSpace(font.value.getFontScale(pixelHeight)) - font.value.getDescent(font.value.getFontScale(pixelHeight)) * 2;
+        float totalHeight = 0;
+        for (Text text : texts)
+            totalHeight += font.value.getFont(text.pixelHeight).getNewLineSpace(1);
         float height = this.getConstraints().getHeightConstraintValue();
         float yPos = this.getConstraints().getYConstraintValue();
         if(verticalAlignment == Alignment.CENTER)
@@ -129,9 +130,10 @@ public class UIText extends UIComponent implements UIFontRenderable {
             if(horizontalAlignment == Alignment.RIGHT)
                 translation.m30(xPos + width - text.getWidth());
 
-            translation.m31(yPos + i * font.value.getNewLineSpace(font.value.getFontScale(pixelHeight)));
+            translation.m31(yPos + i * font.value.getFont(text.pixelHeight).getNewLineSpace(1));
 
             shader.loadUniform(FontShader.position, translation);
+            shader.loadUniform(UniformConstants.texture0, font.value.getFont(text.pixelHeight).getTexture());
 
             VAO vao = text.getVAO();
             vao.bind();
