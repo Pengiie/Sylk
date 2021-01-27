@@ -10,6 +10,10 @@ public class Logger {
         this.currentLogLevel = currentLogLevel;
     }
 
+    public void logLoad(String message) {
+        log(LogLevel.LOAD, message);
+    }
+
     public void logInfo(String message) {
         log(LogLevel.INFO, message);
     }
@@ -21,6 +25,7 @@ public class Logger {
     public void logError(String message) {
         log(LogLevel.ERROR, message);
     }
+
 
     public void log(LogLevel logLevel, String message) {
         if(logLevel.getLevel() > this.currentLogLevel.getLevel())
