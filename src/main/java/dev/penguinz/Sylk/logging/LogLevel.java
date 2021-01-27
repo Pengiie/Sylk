@@ -7,7 +7,8 @@ public enum LogLevel {
 
     ERROR(1, ANSIColor.ANSI_RED+"[ERROR]"),
     WARNING(2, ANSIColor.ANSI_YELLOW+"[WARNING]"),
-    INFO(3, ANSIColor.ANSI_WHITE+"[INFO]");
+    INFO(3, ANSIColor.ANSI_WHITE+"[INFO]"),
+    LOAD(4, ANSIColor.ANSI_WHITE+"[LOAD]");
 
     private final int level;
 

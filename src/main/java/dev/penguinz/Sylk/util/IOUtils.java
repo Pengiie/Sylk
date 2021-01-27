@@ -23,7 +23,7 @@ public class IOUtils {
             buffer.put(buf);
             buffer.flip();
 
-            Logger.getLogger().logInfo("Took "+(System.currentTimeMillis() - time)+"ms to load "+path);
+            Logger.getLogger().logLoad("Took "+(System.currentTimeMillis() - time)+"ms to load "+path);
             return buffer;
         } catch (IOException e) {
             throw new RuntimeException("Could not load file: "+path);
