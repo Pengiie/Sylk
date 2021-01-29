@@ -1,5 +1,6 @@
 package dev.penguinz.Sylk.ui;
 
+import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.animation.values.AnimatableColor;
 import dev.penguinz.Sylk.animation.values.AnimatableFloat;
 import dev.penguinz.Sylk.graphics.VAO;
@@ -8,6 +9,7 @@ import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.MatrixUtils;
 import dev.penguinz.Sylk.util.maths.Vector2;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 public class UIBlock extends UIComponent implements UIRenderable {
@@ -44,4 +46,17 @@ public class UIBlock extends UIComponent implements UIRenderable {
         shader.loadUniform(UniformConstants.color, color.value.toVector());
     }
 
+    @Override
+    public boolean getOverflow() {
+        return overflow;
+    }
+
+    @Override
+    public Vector4f getBounds() {
+        float x = this.getParent().getConstraints().getXConstraintValue();
+        float width = this.getParent().getConstraints().getWidthConstraintValue();
+        float y = Application.getInstance().getWindowHeight() - this.getParent().getConstraints().getYConstraintValue();
+        float height = this.getParent().getConstraints().getHeightConstraintValue();
+        return new Vector4f(x, y - height, x + width, y);
+    }
 }

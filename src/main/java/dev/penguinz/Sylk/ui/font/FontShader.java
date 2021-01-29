@@ -2,6 +2,7 @@ package dev.penguinz.Sylk.ui.font;
 
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.*;
+import dev.penguinz.Sylk.ui.UIShader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,8 @@ public class FontShader {
 
     public static final String position = "u_position";
     public static final String lineThickness = "u_thickness";
+    public static final String overflow = "u_overflow";
+    public static final String overflowBounds = "u_overflowBounds";
 
     static {
         uniforms.add(new ShaderUniformVec4(UniformConstants.color));
@@ -20,6 +23,8 @@ public class FontShader {
 
         uniforms.add(new ShaderUniformMat4(UniformConstants.projectionMatrix));
         uniforms.add(new ShaderUniformMat4(FontShader.position));
+        uniforms.add(new ShaderUniformBool(FontShader.overflow));
+        uniforms.add(new ShaderUniformVec4(FontShader.overflowBounds));
     }
 
     public static Shader create() {
@@ -42,8 +47,15 @@ public class FontShader {
                         "uniform vec4 "+UniformConstants.color+";\n"+
                         "uniform sampler2D "+UniformConstants.texture0 +";\n"+
                         "uniform float "+FontShader.lineThickness+";\n"+
+                        "uniform bool "+FontShader.overflow+";\n"+
+                        "uniform vec4 "+FontShader.overflowBounds+";\n"+
                         "void main()\n"+
                         "{\n" +
+                        "  vec4 fragCoord = gl_FragCoord;\n"+
+                        "  float inBounds = step("+FontShader.overflowBounds+".x, fragCoord.x) * step(fragCoord.x, "+FontShader.overflowBounds+".z) * " +
+                        "step(fragCoord.y, "+FontShader.overflowBounds+".w) * step("+FontShader.overflowBounds+".y, fragCoord.y);\n "+
+                        "  if(!"+FontShader.overflow+" && inBounds == 0)\n"+
+                        "    discard;\n"+
                         "  vec4 textureColor = texture("+UniformConstants.texture0 +", pass_texCoord);\n"+
                         "  if(textureColor.r < 0.25)\n"+
                         "    discard;\n"+

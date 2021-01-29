@@ -15,6 +15,7 @@ import dev.penguinz.Sylk.ui.font.UIFontRenderable;
 import dev.penguinz.Sylk.util.Disposable;
 import dev.penguinz.Sylk.util.maths.Vector2;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -64,12 +65,19 @@ public class UIContainer extends UIComponent implements Disposable {
         for (UIRenderable uiRenderable: uiRenderables) {
             if(uiRenderable instanceof UIFontRenderable) {
                 fontShader.use();
+                fontShader.loadUniform(FontShader.overflow, uiRenderable.getOverflow());
+                fontShader.loadUniform(FontShader.overflowBounds, uiRenderable.getBounds());
                 uiRenderable.render(this.fontShader);
                 shader.use();
                 VAO.quad.bind();
                 VAO.quad.enableVertexAttribArrays();
-            } else
+            } else {
+                shader.loadUniform(UIShader.overflow, uiRenderable.getOverflow());
+                shader.loadUniform(FontShader.overflowBounds, uiRenderable.getBounds());
+
+
                 uiRenderable.render(this.shader);
+            }
 
         }
 

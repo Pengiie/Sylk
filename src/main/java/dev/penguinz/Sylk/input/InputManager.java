@@ -3,10 +3,7 @@ package dev.penguinz.Sylk.input;
 import dev.penguinz.Sylk.event.Event;
 import dev.penguinz.Sylk.event.input.MouseClickEvent;
 import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +18,7 @@ public class InputManager {
     private final HashMap<Key, List<Modifier>> keyReleases = new HashMap<>();
 
     private final Vector2f mousePosition = new Vector2f();
+    private final Vector2f mouseScroll = new Vector2f();
     private final List<Integer> mousePresses = new ArrayList<>();
     private final List<Integer> mouseHolds = new ArrayList<>();
     private final List<Integer> mouseReleases = new ArrayList<>();
@@ -72,6 +70,14 @@ public class InputManager {
         }
     };
 
+    GLFWScrollCallback scrollCallback = new GLFWScrollCallback() {
+        @Override
+        public void invoke(long window, double xoffset, double yoffset) {
+            mouseScroll.x = (float) xoffset;
+            mouseScroll.y = (float) yoffset;
+        }
+    };
+
     public InputManager(long windowHandle, Consumer<Event> eventDispatchCallback) {
         GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_LOCK_KEY_MODS, GLFW.GLFW_TRUE);
         setCallbacks(windowHandle);
@@ -82,6 +88,7 @@ public class InputManager {
         GLFW.glfwSetKeyCallback(windowHandle, keyCallback);
         GLFW.glfwSetCursorPosCallback(windowHandle, cursorPosCallback);
         GLFW.glfwSetMouseButtonCallback(windowHandle, mouseButtonCallback);
+        GLFW.glfwSetScrollCallback(windowHandle, scrollCallback);
     }
 
     public void clearInputs() {
@@ -90,6 +97,7 @@ public class InputManager {
         keyPresses.clear();
         keyHoldsDelayed.clear();
         keyReleases.clear();
+        mouseScroll.x = mouseScroll.y = 0;
     }
 
     public boolean isKeyPressed(Key key, Modifier... modifiers) {
@@ -172,6 +180,14 @@ public class InputManager {
 
     public float getMousePosY() {
         return mousePosition.y;
+    }
+
+    public float getMouseScrollX() {
+        return mouseScroll.x;
+    }
+
+    public float getMouseScrollY() {
+        return mouseScroll.y;
     }
 
 }

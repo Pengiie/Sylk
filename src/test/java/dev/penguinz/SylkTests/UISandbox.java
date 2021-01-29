@@ -27,13 +27,16 @@ public class UISandbox implements Layer {
 
     private final RefContainer<Font> font = new RefContainer<>(null);
 
+    UIText text = new UIText("The Quick Brown Fox Jumped Over The Lazy Dog. sdfefhejfjejfksjefjnjbnjbnjnejfnerjnjenfjr", Color.white, font, new RelativeTextHeight(0.5f));
+
     UIButton component = new UIButton(new Color(1, 0, 1), new Color(0, 1, 0),
-            new UIText("The Quick Brown Fox Jumped Over The Lazy Dog.", Color.white, font, new RelativeTextHeight(0.3f)),
+            text,
             () -> Application.getInstance().getLogger().logInfo("Button has been clicked"));
 
     @Override
     public void init() {
         this.uiContainer = new UIContainer();
+        text.overflow = false;
 
         this.uiContainer.addComponent(
                 component,

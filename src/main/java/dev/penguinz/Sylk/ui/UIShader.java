@@ -2,6 +2,7 @@ package dev.penguinz.Sylk.ui;
 
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.*;
+import dev.penguinz.Sylk.ui.font.FontShader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
 public class UIShader {
 
     public static final String roundness = "u_roundness";
+    public static final String overflow = "u_overflow";
+    public static final String overflowBounds = "u_overflowBounds";
 
     private static final List<ShaderUniform<?>> uniforms = new ArrayList<>();
 
@@ -21,6 +24,9 @@ public class UIShader {
         uniforms.add(new ShaderUniformVec2(UniformConstants.resolution));
         uniforms.add(new ShaderUniformMat4(UniformConstants.projectionMatrix));
         uniforms.add(new ShaderUniformMat4(UniformConstants.transformationMatrix));
+
+        uniforms.add(new ShaderUniformBool(UIShader.overflow));
+        uniforms.add(new ShaderUniformVec4(UIShader.overflowBounds));
     }
 
     public static Shader create() {
@@ -45,8 +51,15 @@ public class UIShader {
                         "uniform vec4 "+UniformConstants.color+";\n"+
                         "uniform bool "+UniformConstants.hasTexture+";\n"+
                         "uniform sampler2D "+UniformConstants.texture0 +";\n"+
+                        "uniform bool "+UIShader.overflow+";\n"+
+                        "uniform vec4 "+ UIShader.overflowBounds+";\n"+
                         "void main()\n"+
                         "{\n" +
+                        "  vec4 fragCoord = gl_FragCoord;\n"+
+                        "  float inBounds = step("+ UIShader.overflowBounds+".x, fragCoord.x) * step(fragCoord.x, "+UIShader.overflowBounds+".z) * " +
+                        "step(fragCoord.y, "+UIShader.overflowBounds+".w) * step("+UIShader.overflowBounds+".y, fragCoord.y);\n "+
+                        "  if(!"+UIShader.overflow+" && inBounds == 0)\n"+
+                        "    discard;\n"+
                         "  vec4 textureColor = vec4(1, 1, 1, 1);\n"+
                         "  if("+UniformConstants.hasTexture+") {\n"+
                         "    textureColor = texture("+UniformConstants.texture0 +", pass_texCoord);\n"+

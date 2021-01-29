@@ -1,5 +1,6 @@
 package dev.penguinz.Sylk.ui;
 
+import dev.penguinz.Sylk.Application;
 import dev.penguinz.Sylk.graphics.VAO;
 import dev.penguinz.Sylk.graphics.shader.Shader;
 import dev.penguinz.Sylk.graphics.shader.uniforms.UniformConstants;
@@ -9,6 +10,7 @@ import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.RefContainer;
 import dev.penguinz.Sylk.util.TextUtils;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -143,5 +145,19 @@ public class UIText extends UIComponent implements UIFontRenderable {
 
             i++;
         }
+    }
+
+    @Override
+    public boolean getOverflow() {
+        return overflow;
+    }
+
+    @Override
+    public Vector4f getBounds() {
+        float x = getConstraints().getXConstraintValue();
+        float width = getConstraints().getWidthConstraintValue();
+        float y = Application.getInstance().getWindowHeight() - getConstraints().getYConstraintValue();
+        float height = getConstraints().getHeightConstraintValue();
+        return new Vector4f(x, y - height, x + width, y);
     }
 }

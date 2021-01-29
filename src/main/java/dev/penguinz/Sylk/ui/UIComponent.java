@@ -10,7 +10,9 @@ public class UIComponent {
     private UIComponent parent;
     private UIConstraints constraints;
 
-    private List<UIComponent> children = new ArrayList<>();
+    private final List<UIComponent> children = new ArrayList<>();
+
+    public boolean overflow = true;
 
     public void addComponent(UIComponent child, UIConstraints constraints) {
         child.setParent(this);
@@ -39,6 +41,10 @@ public class UIComponent {
 
     public void setParent(UIComponent parent) {
         this.parent = parent;
+    }
+
+    public UIComponent getParent() {
+        return parent;
     }
 
     public UIConstraints getConstraints() {
