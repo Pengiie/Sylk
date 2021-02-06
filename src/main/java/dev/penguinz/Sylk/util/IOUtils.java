@@ -5,6 +5,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 public class IOUtils {
@@ -21,7 +22,7 @@ public class IOUtils {
 
             buffer = MemoryUtil.memAlloc(buf.length);
             buffer.put(buf);
-            buffer.flip();
+            ((Buffer) buffer).flip();
 
             Logger.getLogger().logLoad("Took "+(System.currentTimeMillis() - time)+"ms to load "+path);
             return buffer;
