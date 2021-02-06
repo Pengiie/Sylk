@@ -6,6 +6,8 @@ import dev.penguinz.Sylk.graphics.VBOType;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.RefContainer;
 
+import java.util.Arrays;
+
 public class Text {
 
     public final Color color;
@@ -44,10 +46,14 @@ public class Text {
 
             Character charData = font.getCharacterData()[codepoint-Font.START_CHAR];
 
-            float width = (charData.position.z - charData.position.x) * font.getCharacterScale() * pixelHeight;
-            float height = (charData.position.w - charData.position.y) * font.getCharacterScale() * pixelHeight;
-            float descent = charData.descent * font.getCharacterScale() * pixelHeight;
+            float width = (charData.position.z - charData.position.x);
+            float height = (charData.position.w - charData.position.y);
+            float descent = charData.descent;
 
+            // Keep in mind descent is negative
+            float baseline = (font.getLineHeight() + font.getDescent());
+
+            // Array only used to determine the positioning of the vertices in the triangle
             int[] indices = new int[] {
                     0, 1,
                     1, 0,
@@ -59,13 +65,14 @@ public class Text {
             for(int index = 0; index < indices.length; index++) {
                 positions[posIndex] = xPos + (indices[index] == 0 ? 0 : width);
                 textureCoords[posIndex++] = indices[index++] == 0 ? charData.texturePosition.x : charData.texturePosition.z;
-                positions[posIndex] = font.getLineHeight() - (indices[index] == 0 ? 0 : height) + descent;
+
+                positions[posIndex] = baseline - (indices[index] == 0 ? 0 : height) + descent;
                 textureCoords[posIndex++] = indices[index] == 0 ? charData.texturePosition.w : charData.texturePosition.y;
             }
 
-            xPos += width + charData.advance * font.getCharacterScale() * pixelHeight;
+            xPos += width + charData.advance;
             if(i + 1 == text.length())
-                xPos -= charData.advance * font.getCharacterScale() * pixelHeight;
+                xPos -= charData.advance;
         }
         this.width = xPos;
         this.generatedVAO = new VAO(new VBO(positions, 2, VBOType.VERTICES), new VBO(textureCoords, 2, VBOType.TEXTURE_COORDS));

@@ -5,7 +5,6 @@ import dev.penguinz.Sylk.ui.font.Font;
 public class FontOptions extends AssetOptions<Font> {
 
     public int resolution = 2048;
-    public int pixelHeight = 64;
     public int charRange = 96;
     public int overSampling = 1;
 
@@ -16,16 +15,6 @@ public class FontOptions extends AssetOptions<Font> {
      */
     public FontOptions setResolution(int resolution) {
         this.resolution = resolution;
-        return this;
-    }
-
-    /**
-     * Sets the pixel height for the characters of the font to generate.
-     * @param pixelHeight the pixel height for the characters.
-     * @return a reference to this object.
-     */
-    public FontOptions setPixelHeight(int pixelHeight) {
-        this.pixelHeight = pixelHeight;
         return this;
     }
 

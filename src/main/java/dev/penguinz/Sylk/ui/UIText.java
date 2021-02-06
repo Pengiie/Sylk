@@ -113,14 +113,13 @@ public class UIText extends UIComponent implements UIFontRenderable {
 
         float totalHeight = 0;
         for (Text text : texts)
-            totalHeight += font.value.getFont(text.pixelHeight).getNewLineSpace(1);
+            totalHeight += font.value.getFont(text.pixelHeight).getLineHeight();
         float height = this.getConstraints().getHeightConstraintValue();
         float yPos = this.getConstraints().getYConstraintValue();
         if(verticalAlignment == Alignment.CENTER)
             yPos = yPos + height/2 - totalHeight/2;
         if(verticalAlignment == Alignment.BOTTOM)
             yPos = yPos + height - totalHeight;
-
         int i = 0;
         for (Text text: texts) {
             Matrix4f translation = new Matrix4f();
@@ -132,7 +131,7 @@ public class UIText extends UIComponent implements UIFontRenderable {
             if(horizontalAlignment == Alignment.RIGHT)
                 translation.m30(xPos + width - text.getWidth());
 
-            translation.m31(yPos + i * font.value.getFont(text.pixelHeight).getNewLineSpace(1));
+            translation.m31(yPos + i * font.value.getFont(text.pixelHeight).getNewLineSpace());
 
             shader.loadUniform(FontShader.position, translation);
             shader.loadUniform(UniformConstants.texture0, font.value.getFont(text.pixelHeight).getTexture());

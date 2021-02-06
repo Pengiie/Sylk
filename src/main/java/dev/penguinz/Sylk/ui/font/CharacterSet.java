@@ -28,7 +28,7 @@ public class CharacterSet implements Disposable {
     private float fontScale;
     private float characterScale;
 
-    private float lineHeight, newLineSpace, lineGap, descent;
+    private float lineHeight, lineGap, newLineSpace, descent, ascent;
 
     public CharacterSet(Font font, int pixelHeight, int width, int height, int overSampling) {
         this.font = font;
@@ -56,8 +56,9 @@ public class CharacterSet implements Disposable {
 
             STBTruetype.stbtt_GetFontVMetrics(font.getFontInfo(), ascent, descent, lineGap);
 
-            this.lineHeight = ascent.get(0) - (this.descent = descent.get(0));
-            this.newLineSpace = this.lineHeight + (this.lineGap = lineGap.get(0));
+            this.lineHeight = (this.ascent = ascent.get(0)) - (this.descent = descent.get(0));
+            this.lineGap = lineGap.get(0);
+            this.newLineSpace = this.lineHeight + this.lineGap;
 
             STBTTPackContext packContext = STBTTPackContext.mallocStack(stack);
 
@@ -105,24 +106,20 @@ public class CharacterSet implements Disposable {
         return fontScale;
     }
 
-    public float getCharacterScale() {
-        return characterScale;
-    }
-
     public float getLineHeight() {
         return lineHeight * getFontScale();
     }
 
-    public float getNewLineSpace(float scale) {
+    public float getDescent() {
+        return descent * getFontScale();
+    }
+
+    public float getLineGap() {
+        return lineGap * getFontScale();
+    }
+
+    public float getNewLineSpace() {
         return newLineSpace * getFontScale();
-    }
-
-    public float getLineGap(float scale) {
-        return lineGap * scale;
-    }
-
-    public float getDescent(float scale) {
-        return descent * scale;
     }
 
     @Override

@@ -13,6 +13,7 @@ import dev.penguinz.Sylk.ui.UIText;
 import dev.penguinz.Sylk.ui.constraints.*;
 import dev.penguinz.Sylk.ui.font.Font;
 import dev.penguinz.Sylk.ui.font.RelativeTextHeight;
+import dev.penguinz.Sylk.util.Alignment;
 import dev.penguinz.Sylk.util.Color;
 import dev.penguinz.Sylk.util.Layer;
 import dev.penguinz.Sylk.util.RefContainer;
@@ -27,7 +28,8 @@ public class UISandbox implements Layer {
 
     private final RefContainer<Font> font = new RefContainer<>(null);
 
-    UIText text = new UIText("The Quick Brown Fox Jumped Over The Lazy Dog. sdfefhejfjejfksjefjnjbnjbnjnejfnerjnjenfjr", Color.white, font, new RelativeTextHeight(0.5f));
+    UIText text = new UIText("Play", Color.white, font, new RelativeTextHeight(1f)).
+            setHorizontalAlignment(Alignment.CENTER).setVerticalAlignment(Alignment.CENTER);
 
     UIButton component = new UIButton(new Color(1, 0, 1), new Color(0, 1, 0),
             text,
@@ -41,16 +43,15 @@ public class UISandbox implements Layer {
         this.uiContainer.addComponent(
                 component,
                 new UIConstraints().
-                setXConstraint(new CenterConstraint()).
-                setYConstraint(new PixelConstraint(50)).
-                setWidthConstraint(new RelativeConstraint(0.2f)).
-                setHeightConstraint(new RatioConstraint(0.35f))
+                        setXConstraint(new PixelConstraint(250, Alignment.LEFT)).
+                        setYConstraint(new PixelConstraint(200, Alignment.BOTTOM)).
+                        setWidthConstraint(new AbsoluteConstraint(300)).setHeightConstraint(new AbsoluteConstraint(100))
         );
         this.increasePixels = new Animation(1).
                 addValue(component.getConstraints().getYAnimatableConstraint(), 50, 100);
 
         Application.getInstance().getAssets().loadAsset("arial.ttf",
-                new FontOptions().setPixelHeight(32).
+                new FontOptions().
                 setAssetLoadedCallback(font -> this.font.value = font));
     }
 

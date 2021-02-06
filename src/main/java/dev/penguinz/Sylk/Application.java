@@ -70,6 +70,7 @@ public class Application {
     /**
      * Returns the first layer that matches a given class.
      * @param layerClass the class to match with.
+     * @param <T> any class that implements a Layer.
      * @return the first found layer matching the class.
      */
     public <T extends Layer> T getLayer(Class<T> layerClass) {
